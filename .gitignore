@@ -10,8 +10,10 @@ venv/
 ENV/
 env/
 
-# Project-specific config / Secrets
+# Project-specific config / Secrets / Debug
 .env
+last_recording.wav
+
 
 # Distribution / packaging
 bin/

@@ -148,6 +148,34 @@ class WoiceFlowApp:
                 self.console.print("[bold red]❌ No audio data captured.[/bold red]")
                 return
 
+            import numpy as np
+            peak_volume = float(np.max(np.abs(audio_data)))
+            self.console.print(f"[dim]Audio volume check: Peak amplitude is {peak_volume:.4f}[/dim]")
+            
+            # Save audio to a debug WAV file in the root workspace
+            import wave
+            try:
+                # Scale float32 to 16-bit integer
+                int_data = (audio_data * 32767).astype(np.int16)
+                with wave.open("last_recording.wav", "wb") as wf:
+                    wf.setnchannels(1)
+                    wf.setsampwidth(2)
+                    wf.setframerate(self.recorder.sample_rate)
+                    wf.writeframes(int_data.tobytes())
+                logger.debug("Saved debug recording to last_recording.wav")
+            except Exception as e:
+                logger.error(f"Failed to save last_recording.wav: {e}")
+
+            if peak_volume < 0.005:
+                self.console.print(
+                    "[bold yellow]⚠️ Warning: The recording is silent or extremely quiet (peak: "
+                    f"{peak_volume:.4f}). Check if your microphone is muted or if "
+                    "the wrong input device is selected in your system settings![/bold yellow]"
+                )
+                self.console.print(
+                    "[dim]Hint: Play 'last_recording.wav' in the project directory to hear what was captured.[/dim]"
+                )
+
             self.console.print("[bold blue]🎙️ Transcribing speech...[/bold blue]")
             transcript = self.engine.transcribe(audio_data)
             
