@@ -109,7 +109,29 @@ class WoiceFlowApp:
                 self.state = "idle"
                 self.console.print("\n[bold green]Ready! Press F9 to record.[/bold green]")
 
+def load_dotenv() -> None:
+    """Simple in-house dotenv loader to set environment variables from a .env file."""
+    import os
+    if os.path.exists(".env"):
+        try:
+            with open(".env", "r") as f:
+                for line in f:
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        key, val = line.split("=", 1)
+                        key = key.strip()
+                        val = val.strip().strip("'\"")
+                        os.environ[key] = val
+                        # Standardize Hugging Face token env variables
+                        if key in ("HUGGINGFACE_ACCESS_TOKEN", "HF_TOKEN"):
+                            os.environ["HF_TOKEN"] = val
+                            os.environ["HUGGINGFACE_ACCESS_TOKEN"] = val
+            logger.info("Loaded environment variables from .env file.")
+        except Exception as e:
+            logger.warning(f"Failed to load .env file: {e}")
+
 def main():
+    load_dotenv()
     app = WoiceFlowApp()
     app.start()
 
