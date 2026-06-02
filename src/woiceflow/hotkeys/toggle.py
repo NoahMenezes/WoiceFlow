@@ -9,11 +9,11 @@ def main() -> None:
         client.connect(socket_path)
         client.sendall(b"toggle")
         client.close()
-        print("WoiceFlow toggle command sent successfully.")
+        print("🎙️ WoiceFlow toggle signal sent! Happy dictating! 😊✨")
     except Exception as e:
         print(
-            f"Error: Could not connect to WoiceFlow daemon. "
-            f"Is it running? (Socket error: {e})",
+            f"❌ Error: Could not connect to WoiceFlow daemon. "
+            f"Is it running? (Socket error: {e}) 😢",
             file=sys.stderr
         )
         sys.exit(1)
