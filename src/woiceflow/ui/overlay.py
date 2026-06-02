@@ -10,7 +10,9 @@ except ImportError:
     PYQT_AVAILABLE = False
     logger.warning("PyQt6 is not available. GUI overlay will not be functional.")
 
-class PulsingIndicator(QWidget) if PYQT_AVAILABLE else object:
+PulsingIndicatorParent = QWidget if PYQT_AVAILABLE else object
+
+class PulsingIndicator(PulsingIndicatorParent):
     """A beautiful canvas widget that draws state-dependent pulsing visual indicators."""
     
     def __init__(self):
@@ -75,7 +77,9 @@ class PulsingIndicator(QWidget) if PYQT_AVAILABLE else object:
         painter.drawEllipse(7, 7, 10, 10)
 
 
-class DictationHUD(QWidget) if PYQT_AVAILABLE else object:
+DictationHUDParent = QWidget if PYQT_AVAILABLE else object
+
+class DictationHUD(DictationHUDParent):
     """Borderless, glassmorphic HUD that floats on top of all windows at the bottom of the screen."""
 
     def __init__(self):
