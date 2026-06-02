@@ -86,6 +86,9 @@ class IPCServer:
                     logger.debug("Received legacy toggle signal via IPC.")
                     self.callback()
                     buffer = b""
+        except OSError as e:
+            if e.errno != 9:
+                logger.debug(f"IPC client connection exception: {e}")
         except Exception as e:
             logger.debug(f"IPC client connection exception: {e}")
         finally:
