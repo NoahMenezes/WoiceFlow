@@ -1,4 +1,6 @@
 import sys
+import os
+import socket
 import time
 import threading
 from loguru import logger
@@ -8,6 +10,64 @@ from woiceflow.audio.recorder import AudioRecorder
 from woiceflow.speech.whisper_engine import WhisperEngine
 from woiceflow.injector.typer import TextInjector
 from woiceflow.hotkeys.listener import HotkeyListener
+
+class IPCServer:
+    """Listens on a local Unix socket to receive recording toggle triggers (Wayland compatibility)."""
+
+    def __init__(self, callback, socket_path: str = "/run/user/1000/woiceflow.socket"):
+        self.callback = callback
+        self.socket_path = socket_path
+        self.server_socket = None
+        self.running = False
+
+    def start(self) -> None:
+        """Starts the local Unix socket server in a daemon thread."""
+        if os.path.exists(self.socket_path):
+            try:
+                os.unlink(self.socket_path)
+            except OSError:
+                pass
+
+        try:
+            self.server_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            self.server_socket.bind(self.socket_path)
+            self.server_socket.listen(1)
+            self.running = True
+            threading.Thread(target=self._listen_loop, daemon=True).start()
+            logger.info(f"IPC Server started on {self.socket_path}")
+        except Exception as e:
+            logger.error(f"Failed to start IPC Server: {e}")
+
+    def _listen_loop(self) -> None:
+        """Listens for connections and calls callback when 'toggle' message is received."""
+        while self.running:
+            try:
+                conn, _ = self.server_socket.accept()
+                with conn:
+                    data = conn.recv(1024)
+                    if data == b"toggle":
+                        logger.debug("Received toggle signal via IPC socket.")
+                        self.callback()
+            except Exception as e:
+                if self.running:
+                    logger.debug(f"IPC connection exception: {e}")
+
+    def stop(self) -> None:
+        """Stops the IPC server and cleans up the socket file."""
+        self.running = False
+        if self.server_socket:
+            try:
+                self.server_socket.close()
+            except Exception:
+                pass
+            self.server_socket = None
+        if os.path.exists(self.socket_path):
+            try:
+                os.unlink(self.socket_path)
+            except OSError:
+                pass
+        logger.info("IPC Server stopped and socket cleaned up.")
+
 
 class WoiceFlowApp:
     """Main application coordinating hotkey listener, recorder, transcription, and injection."""
@@ -22,7 +82,10 @@ class WoiceFlowApp:
         self.state = "idle"
         self.state_lock = threading.Lock()
         
-        # Listen for global F9 press
+        # Wayland-compatible Unix socket server for global hotkey simulation
+        self.ipc_server = IPCServer(callback=self.toggle_recording)
+        
+        # Standard pynput listener (works natively on X11 / XWayland / active window)
         self.listener = HotkeyListener(hotkey_str="<f9>", on_trigger=self.toggle_recording)
 
     def start(self) -> None:
@@ -37,7 +100,10 @@ class WoiceFlowApp:
             self.console.print(f"[bold red]Critical Error: Failed to load speech recognition model. {e}[/bold red]")
             sys.exit(1)
             
-        # Start hotkey listener
+        # Start IPC Server for Wayland compatibility
+        self.ipc_server.start()
+
+        # Start standard hotkey listener
         self.listener.start()
         
         self.console.print("\n[bold green]🚀 WoiceFlow is active and running![/bold green]")
@@ -52,6 +118,7 @@ class WoiceFlowApp:
         except KeyboardInterrupt:
             self.console.print("\n[yellow]Shutting down WoiceFlow...[/yellow]")
             self.listener.stop()
+            self.ipc_server.stop()
             self.console.print("[bold green]Goodbye![/bold green]")
 
     def toggle_recording(self) -> None:
