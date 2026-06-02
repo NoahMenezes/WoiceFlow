@@ -69,6 +69,8 @@ class IPCServer:
         logger.info("IPC Server stopped and socket cleaned up.")
 
 
+from woiceflow.ui.overlay import DictationHUD, HUDController, PYQT_AVAILABLE, QApplication, QTimer
+
 class WoiceFlowApp:
     """Main application coordinating hotkey listener, recorder, transcription, and injection."""
 
@@ -87,6 +89,17 @@ class WoiceFlowApp:
         
         # Standard pynput listener (works natively on X11 / XWayland / active window)
         self.listener = HotkeyListener(hotkey_str="<f9>", on_trigger=self.toggle_recording)
+
+        # Initialize GUI Overlay if PyQt6 is available
+        self.use_gui = PYQT_AVAILABLE
+        if self.use_gui:
+            self.qt_app = QApplication.instance() or QApplication(sys.argv)
+            self.hud = DictationHUD()
+            self.hud_controller = HUDController(self.hud)
+            logger.info("PyQt6 GUI HUD overlay loaded successfully.")
+        else:
+            self.hud = None
+            self.hud_controller = None
 
     def start(self) -> None:
         """Starts the application, pre-loads the model, and enters the main loop."""
@@ -112,27 +125,54 @@ class WoiceFlowApp:
         self.console.print("  • Press [bold cyan]F9[/bold cyan] again to stop, transcribe, and inject.")
         self.console.print("  • Press [bold red]Ctrl+C[/bold red] in this terminal to quit.\n")
         
-        try:
-            while True:
-                time.sleep(0.5)
-        except KeyboardInterrupt:
-            self.console.print("\n[yellow]Shutting down WoiceFlow...[/yellow]")
-            self.listener.stop()
-            self.ipc_server.stop()
-            self.console.print("[bold green]Goodbye![/bold green]")
+        if self.use_gui:
+            # Handle SIGINT (Ctrl+C) gracefully in PyQt6
+            import signal
+            def sigint_handler(*args):
+                logger.info("SIGINT received. Shutting down...")
+                self.listener.stop()
+                self.ipc_server.stop()
+                if self.hud:
+                    self.hud.close()
+                QApplication.quit()
+                sys.exit(0)
+            
+            signal.signal(signal.SIGINT, sigint_handler)
+            
+            # Setup a timer to periodically yield control to the Python interpreter so it can catch signals
+            self.sig_timer = QTimer()
+            self.sig_timer.start(200)
+            self.sig_timer.timeout.connect(lambda: None)
+            
+            logger.info("Starting PyQt6 Event Loop...")
+            self.qt_app.exec()
+        else:
+            # Fallback to CLI event loop
+            try:
+                while True:
+                    time.sleep(0.5)
+            except KeyboardInterrupt:
+                self.console.print("\n[yellow]Shutting down WoiceFlow...[/yellow]")
+                self.listener.stop()
+                self.ipc_server.stop()
+                self.console.print("[bold green]Goodbye![/bold green]")
 
     def toggle_recording(self) -> None:
-        """Toggles the recording state. Thread-safe callback from HotkeyListener."""
+        """Toggles the recording state. Thread-safe callback from HotkeyListener or IPC socket."""
         with self.state_lock:
             if self.state == "idle":
                 # Transition to recording
                 if self.recorder.start_recording():
                     self.state = "recording"
                     self.console.print("\n[bold red]🔴 Recording... Speak now. Press F9 to finish.[/bold red]")
+                    if self.use_gui:
+                        self.hud_controller.update_hud("recording", "🎙️ Recording...")
             elif self.state == "recording":
                 # Transition to transcribing
                 self.state = "transcribing"
                 self.console.print("[bold yellow]⏳ Stopped recording. Processing audio...[/bold yellow]")
+                if self.use_gui:
+                    self.hud_controller.update_hud("transcribing", "⏳ Transcribing...")
                 # Run transcription & injection in a background thread to keep hotkey thread responsive
                 threading.Thread(target=self._process_and_inject, daemon=True).start()
             elif self.state == "transcribing":
@@ -146,6 +186,8 @@ class WoiceFlowApp:
             
             if audio_data is None or len(audio_data) == 0:
                 self.console.print("[bold red]❌ No audio data captured.[/bold red]")
+                if self.use_gui:
+                    self.hud_controller.update_hud("success", "❌ No audio data captured.", 2000)
                 return
 
             import numpy as np
@@ -181,24 +223,36 @@ class WoiceFlowApp:
             
             if not transcript:
                 self.console.print("[bold red]❌ No speech recognized.[/bold red]")
+                if self.use_gui:
+                    self.hud_controller.update_hud("success", "❌ No speech recognized.", 2000)
                 return
 
             self.console.print(f"[bold green]✨ Dictated:[/bold green] \"[italic]{transcript}[/italic]\"")
+            if self.use_gui:
+                # Truncate for overlay display if it's too long
+                display_text = transcript if len(transcript) < 40 else f"{transcript[:37]}..."
+                self.hud_controller.update_hud("transcribing", f"✨ {display_text}")
             
             self.console.print("[bold blue]⌨️ Injecting text into active window...[/bold blue]")
             success = self.injector.inject(transcript)
             
             if success:
                 self.console.print("[bold green]✅ Text injected successfully![/bold green]")
+                if self.use_gui:
+                    self.hud_controller.update_hud("success", "✅ Text typed! 😊", 1500)
             else:
                 self.console.print(
                     "[bold red]❌ Injection failed. Please check if the 'ydotoold' daemon is running "
                     "and accessible.[/bold red]"
                 )
+                if self.use_gui:
+                    self.hud_controller.update_hud("success", "❌ Injection failed! 😢", 2500)
                 
         except Exception as e:
             logger.exception(f"Unhandled error in transcription pipeline: {e}")
             self.console.print(f"[bold red]❌ An error occurred: {e}[/bold red]")
+            if self.use_gui:
+                self.hud_controller.update_hud("success", f"❌ Error: {e}", 2500)
         finally:
             with self.state_lock:
                 self.state = "idle"
