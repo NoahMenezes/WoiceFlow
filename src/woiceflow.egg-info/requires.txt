@@ -1,8 +1,0 @@
-faster-whisper>=1.2.1
-loguru>=0.7.3
-numpy>=2.4.6
-pynput>=1.8.2
-pyqt6>=6.11.0
-rich>=15.0.0
-scipy>=1.17.1
-sounddevice>=0.5.5
