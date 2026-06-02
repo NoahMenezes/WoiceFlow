@@ -11,49 +11,116 @@ from woiceflow.speech.whisper_engine import WhisperEngine
 from woiceflow.injector.typer import TextInjector
 from woiceflow.hotkeys.listener import HotkeyListener
 
-class IPCServer:
-    """Listens on a local Unix socket to receive recording toggle triggers (Wayland compatibility)."""
+import json
 
-    def __init__(self, callback, socket_path: str = "/run/user/1000/woiceflow.socket"):
+class IPCServer:
+    """Listens on local sockets to communicate with frontends (Wayland & Windows compatibility)."""
+
+    def __init__(self, callback, socket_path: str = "/run/user/1000/woiceflow.socket", port: int = 17005):
         self.callback = callback
         self.socket_path = socket_path
+        self.port = port
         self.server_socket = None
         self.running = False
+        self.clients = []
+        self.clients_lock = threading.Lock()
 
     def start(self) -> None:
-        """Starts the local Unix socket server in a daemon thread."""
-        if os.path.exists(self.socket_path):
-            try:
-                os.unlink(self.socket_path)
-            except OSError:
-                pass
+        """Starts the local socket server in a daemon thread."""
+        self.running = True
+        threading.Thread(target=self._listen_loop, daemon=True).start()
 
+    def _listen_loop(self) -> None:
+        is_windows = os.name == 'nt'
         try:
-            self.server_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            self.server_socket.bind(self.socket_path)
-            self.server_socket.listen(1)
-            self.running = True
-            threading.Thread(target=self._listen_loop, daemon=True).start()
-            logger.info(f"IPC Server started on {self.socket_path}")
+            if is_windows:
+                # On Windows, we use a localhost TCP socket
+                self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                self.server_socket.bind(('127.0.0.1', self.port))
+                logger.info(f"IPC Server started on TCP port {self.port} (Windows mode)")
+            else:
+                # On Linux/macOS, we use a Unix Domain Socket
+                if os.path.exists(self.socket_path):
+                    try:
+                        os.unlink(self.socket_path)
+                    except OSError:
+                        pass
+                self.server_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                self.server_socket.bind(self.socket_path)
+                logger.info(f"IPC Server started on Unix socket {self.socket_path}")
+
+            self.server_socket.listen(5)
+
+            while self.running:
+                try:
+                    conn, _ = self.server_socket.accept()
+                    threading.Thread(target=self._handle_client, args=(conn,), daemon=True).start()
+                except Exception as e:
+                    if self.running:
+                        logger.debug(f"Accept error in socket server: {e}")
         except Exception as e:
             logger.error(f"Failed to start IPC Server: {e}")
 
-    def _listen_loop(self) -> None:
-        """Listens for connections and calls callback when 'toggle' message is received."""
-        while self.running:
-            try:
-                conn, _ = self.server_socket.accept()
-                with conn:
-                    data = conn.recv(1024)
-                    if data == b"toggle":
-                        logger.debug("Received toggle signal via IPC socket.")
+    def _handle_client(self, conn) -> None:
+        with self.clients_lock:
+            self.clients.append(conn)
+
+        logger.debug("New IPC client connected.")
+        buffer = b""
+        try:
+            while self.running:
+                data = conn.recv(4096)
+                if not data:
+                    break
+                buffer += data
+                while b"\n" in buffer:
+                    line, buffer = buffer.split(b"\n", 1)
+                    line_str = line.decode('utf-8').strip()
+                    if line_str == "toggle":
+                        logger.debug("Received toggle command via IPC.")
                         self.callback()
-            except Exception as e:
-                if self.running:
-                    logger.debug(f"IPC connection exception: {e}")
+                
+                # Support legacy connection closing trigger (like toggle.py does)
+                if buffer == b"toggle":
+                    logger.debug("Received legacy toggle signal via IPC.")
+                    self.callback()
+                    buffer = b""
+        except Exception as e:
+            logger.debug(f"IPC client connection exception: {e}")
+        finally:
+            with self.clients_lock:
+                if conn in self.clients:
+                    self.clients.remove(conn)
+            try:
+                conn.close()
+            except Exception:
+                pass
+            logger.debug("IPC client disconnected.")
+
+    def broadcast(self, event: str, data: any = None) -> None:
+        """Sends a JSON-encoded event string ending with newline to all connected clients."""
+        payload = json.dumps({"event": event, "data": data}) + "\n"
+        payload_bytes = payload.encode('utf-8')
+
+        with self.clients_lock:
+            disconnected_clients = []
+            for client in self.clients:
+                try:
+                    client.sendall(payload_bytes)
+                except Exception:
+                    disconnected_clients.append(client)
+
+            for client in disconnected_clients:
+                if client in self.clients:
+                    self.clients.remove(client)
+                    try:
+                        client.close()
+                    except Exception:
+                        pass
 
     def stop(self) -> None:
-        """Stops the IPC server and cleans up the socket file."""
+        """Stops the IPC server and cleans up resource handles."""
         self.running = False
         if self.server_socket:
             try:
@@ -61,7 +128,16 @@ class IPCServer:
             except Exception:
                 pass
             self.server_socket = None
-        if os.path.exists(self.socket_path):
+
+        with self.clients_lock:
+            for client in self.clients:
+                try:
+                    client.close()
+                except Exception:
+                    pass
+            self.clients.clear()
+
+        if os.name != 'nt' and os.path.exists(self.socket_path):
             try:
                 os.unlink(self.socket_path)
             except OSError:
@@ -76,7 +152,7 @@ class WoiceFlowApp:
 
     def __init__(self):
         self.console = Console()
-        self.recorder = AudioRecorder()
+        self.recorder = AudioRecorder(on_amplitude=self._on_amplitude)
         self.engine = WhisperEngine()
         self.injector = TextInjector()
         
@@ -157,6 +233,12 @@ class WoiceFlowApp:
                 self.ipc_server.stop()
                 self.console.print("[bold green]Goodbye![/bold green]")
 
+    def _on_amplitude(self, amplitude: float) -> None:
+        """Callback from AudioRecorder when new audio frame is captured."""
+        with self.state_lock:
+            if self.state == "recording":
+                self.ipc_server.broadcast("AmplitudeUpdated", {"amplitude": amplitude})
+
     def toggle_recording(self) -> None:
         """Toggles the recording state. Thread-safe callback from HotkeyListener or IPC socket."""
         with self.state_lock:
@@ -165,12 +247,15 @@ class WoiceFlowApp:
                 if self.recorder.start_recording():
                     self.state = "recording"
                     self.console.print("\n[bold red]🔴 Recording... Speak now. Press F9 to finish.[/bold red]")
+                    self.ipc_server.broadcast("RecordingStarted")
                     if self.use_gui:
                         self.hud_controller.update_hud("recording", "🎙️ Recording...")
             elif self.state == "recording":
                 # Transition to transcribing
                 self.state = "transcribing"
                 self.console.print("[bold yellow]⏳ Stopped recording. Processing audio...[/bold yellow]")
+                self.ipc_server.broadcast("RecordingStopped")
+                self.ipc_server.broadcast("TranscribingStarted")
                 if self.use_gui:
                     self.hud_controller.update_hud("transcribing", "⏳ Transcribing...")
                 # Run transcription & injection in a background thread to keep hotkey thread responsive
@@ -186,6 +271,7 @@ class WoiceFlowApp:
             
             if audio_data is None or len(audio_data) == 0:
                 self.console.print("[bold red]❌ No audio data captured.[/bold red]")
+                self.ipc_server.broadcast("ErrorOccurred", {"message": "No audio data captured."})
                 if self.use_gui:
                     self.hud_controller.update_hud("success", "❌ No audio data captured.", 2000)
                 return
@@ -223,11 +309,13 @@ class WoiceFlowApp:
             
             if not transcript:
                 self.console.print("[bold red]❌ No speech recognized.[/bold red]")
+                self.ipc_server.broadcast("ErrorOccurred", {"message": "No speech recognized."})
                 if self.use_gui:
                     self.hud_controller.update_hud("success", "❌ No speech recognized.", 2000)
                 return
 
             self.console.print(f"[bold green]✨ Dictated:[/bold green] \"[italic]{transcript}[/italic]\"")
+            self.ipc_server.broadcast("TranscribingFinished", {"text": transcript})
             if self.use_gui:
                 # Truncate for overlay display if it's too long
                 display_text = transcript if len(transcript) < 40 else f"{transcript[:37]}..."
@@ -245,12 +333,14 @@ class WoiceFlowApp:
                     "[bold red]❌ Injection failed. Please check if the 'ydotoold' daemon is running "
                     "and accessible.[/bold red]"
                 )
+                self.ipc_server.broadcast("ErrorOccurred", {"message": "Text injection failed."})
                 if self.use_gui:
                     self.hud_controller.update_hud("success", "❌ Injection failed! 😢", 2500)
                 
         except Exception as e:
             logger.exception(f"Unhandled error in transcription pipeline: {e}")
             self.console.print(f"[bold red]❌ An error occurred: {e}[/bold red]")
+            self.ipc_server.broadcast("ErrorOccurred", {"message": str(e)})
             if self.use_gui:
                 self.hud_controller.update_hud("success", f"❌ Error: {e}", 2500)
         finally:

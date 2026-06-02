@@ -6,13 +6,14 @@ from loguru import logger
 class AudioRecorder:
     """Handles thread-safe audio recording from a microphone using sounddevice."""
 
-    def __init__(self, sample_rate: int = 16000, channels: int = 1, device: int | str | None = None):
+    def __init__(self, sample_rate: int = 16000, channels: int = 1, device: int | str | None = None, on_amplitude = None):
         self.sample_rate = sample_rate
         self.channels = channels
         self.device = device
         self.audio_queue = queue.Queue()
         self.stream = None
         self.is_recording = False
+        self.on_amplitude = on_amplitude
 
     def _audio_callback(self, indata: np.ndarray, frames: int, time_info: dict, status: sd.CallbackFlags) -> None:
         """This callback is called for each audio block by sounddevice."""
@@ -21,6 +22,11 @@ class AudioRecorder:
         
         # Put a copy of the input data into the queue
         self.audio_queue.put(indata.copy())
+
+        # Invoke the amplitude callback if provided
+        if self.on_amplitude and len(indata) > 0:
+            peak = float(np.max(np.abs(indata)))
+            self.on_amplitude(peak)
 
     def start_recording(self) -> bool:
         """Starts recording audio from the microphone."""
