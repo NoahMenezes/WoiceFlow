@@ -75,10 +75,13 @@ class TextInjector:
             logger.debug("Empty text provided for injection. Skipping.")
             return True
 
-        logger.info(f"Injecting transcribed text: {text!r}")
+        import os
+        key_delay = os.getenv("WOICEFLOW_KEY_DELAY", "2")
+        key_hold = os.getenv("WOICEFLOW_KEY_HOLD", "1")
+        logger.info(f"Injecting transcribed text: {text!r} (delay: {key_delay}ms, hold: {key_hold}ms)")
 
-        # Construct the command
-        cmd = [self._ydotool_path, "type", "-f", "-"]
+        # Construct the command with optimized latency parameters
+        cmd = [self._ydotool_path, "type", "-d", key_delay, "-H", key_hold, "-f", "-"]
         
         # Prepare environment
         import os

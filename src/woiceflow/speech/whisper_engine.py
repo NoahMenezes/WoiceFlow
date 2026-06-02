@@ -8,14 +8,15 @@ class WhisperEngine:
 
     def __init__(
         self,
-        model_size: str = "base",
-        device: str = "cpu",
-        compute_type: str = "int8",
+        model_size: str | None = None,
+        device: str | None = None,
+        compute_type: str | None = None,
         download_root: str | None = None,
     ):
-        self.model_size = model_size
-        self.device = device
-        self.compute_type = compute_type
+        import os
+        self.model_size = model_size or os.getenv("WOICEFLOW_MODEL_SIZE", "base")
+        self.device = device or os.getenv("WOICEFLOW_DEVICE", "cpu")
+        self.compute_type = compute_type or os.getenv("WOICEFLOW_COMPUTE_TYPE", "int8")
         self.download_root = download_root
         self._model = None
 
@@ -41,6 +42,44 @@ class WhisperEngine:
             logger.error(f"Failed to load Faster-Whisper model: {e}")
             raise
 
+    def _correct_typos(self, text: str) -> str:
+        """Corrects common dictation and spelling mistakes for technical terms."""
+        if not text:
+            return text
+
+        import re
+        
+        # Dictionary of lowercase spelling/typo patterns to correct capitalized versions
+        corrections = {
+            r"\bnext\s*js\b": "Next.js",
+            r"\btypescript\b": "TypeScript",
+            r"\bjavascript\b": "JavaScript",
+            r"\btailwind\s*css\b": "Tailwind CSS",
+            r"\btailwind\b": "Tailwind",
+            r"\bgithub\b": "GitHub",
+            r"\bvs\s*code\b": "VS Code",
+            r"\by\s*do\s*tool\b": "ydotool",
+            r"\bydotool\b": "ydotool",
+            r"\bvoice\s*flow\b": "WoiceFlow",
+            r"\bwoiceflow\b": "WoiceFlow",
+            r"\bpyqt\s*6\b": "PyQt6",
+            r"\bpyqt\b": "PyQt6",
+            r"\bpython\b": "Python",
+            r"\bfedora\b": "Fedora",
+            r"\bwayland\b": "Wayland",
+            r"\bgnome\b": "GNOME",
+            r"\bchat\s*gpt\b": "ChatGPT",
+            r"\bapi\b": "API",
+            r"\bapis\b": "APIs",
+            r"\bui\b": "UI",
+        }
+        
+        corrected = text
+        for pattern, replacement in corrections.items():
+            corrected = re.sub(pattern, replacement, corrected, flags=re.IGNORECASE)
+            
+        return corrected
+
     def transcribe(self, audio_data: np.ndarray, sample_rate: int = 16000) -> str:
         """
         Transcribes the input audio data (numpy array).
@@ -56,13 +95,15 @@ class WhisperEngine:
 
         try:
             # transcribe expects a 1D float32 numpy array or filename
-            # We can pass raw audio data directly
+            # We pass technical terms as initial_prompt to guide spelling and capitalization
+            prompt_guide = "WoiceFlow, Next.js, TypeScript, React, Vite, Python, Wayland, Fedora, GNOME, ydotool, Tailwind CSS, VS Code, GitHub."
             segments, info = self._model.transcribe(
                 audio_data,
                 beam_size=5,
                 language="en",  # Default to English for better latency, or auto-detect if None
                 vad_filter=True,  # Use Voice Activity Detection to filter out silence/noise
-                vad_parameters=dict(min_silence_duration_ms=500)
+                vad_parameters=dict(min_silence_duration_ms=500),
+                initial_prompt=prompt_guide
             )
 
             # Join segments
@@ -72,6 +113,7 @@ class WhisperEngine:
                 logger.debug(f"Transcribed segment: [{segment.start:.2f}s -> {segment.end:.2f}s] {segment.text!r}")
 
             full_text = "".join(text_segments).strip()
+            full_text = self._correct_typos(full_text)
             logger.info(f"Transcription finished. Result: {full_text!r}")
             return full_text
         except Exception as e:
