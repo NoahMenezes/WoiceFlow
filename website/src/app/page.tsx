@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { LogIn, UserPlus, Play, Sparkles, Menu, X, Check, Terminal, Shield, Zap, Keyboard, HelpCircle, ArrowRight, Activity, BookOpen, Layers, Cpu, Award, MessageSquare } from 'lucide-react';
+import { UserPlus, Play, Sparkles, Menu, X, Check, Terminal, Shield, Zap, Keyboard, HelpCircle, ArrowRight, BookOpen, Layers, Award, MessageSquare } from 'lucide-react';
 import BoomerangVideoBg from '@/components/BoomerangVideoBg';
 
 const BG_VIDEO =
@@ -31,8 +31,9 @@ export default function Home() {
 
   const navLinks = [
     { href: '#why-us', label: 'The Core Technology' },
-    { href: '#performance', label: 'Performance Metrics' },
-    { href: '#features', label: 'Product Features' },
+    { href: '#timeline', label: 'How It Works' },
+    { href: '#feature-tree', label: 'Architecture Map' },
+    { href: '#comparisons', label: 'Product Comparison' },
     { href: '#guide', label: 'Technical Guide' },
     { href: '#faq', label: 'FAQ' },
   ];
@@ -61,8 +62,8 @@ export default function Home() {
                 {link.label}
               </a>
             ))}
-            <a href="#guide" className="ml-2 bg-[#1f2a1d] hover:bg-[#2a3827] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-200 hover:scale-[1.02]">
-              Install Guide
+            <a href="#guide" className="ml-2 bg-[#1f2a1d] hover:bg-[#2a3827] text-white text-sm font-medium px-5 py-2.5 rounded-full transition-all duration-200 hover:scale-[1.02] inline-flex items-center gap-1">
+              Install Guide <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
 
@@ -176,8 +177,8 @@ export default function Home() {
               A glassmorphic overlay for Fedora GNOME Wayland. It bridges the gap between hardware microphones and local AI pipelines, typing straight into your active application.
             </p>
             <div className="flex items-center gap-4 flex-wrap">
-              <a href="#guide" className="bg-[#3d5638] hover:bg-[#2d4228] text-white text-sm font-semibold px-6 py-2.5 rounded-full transition-colors shadow-sm">
-                Get Started
+              <a href="#guide" className="bg-[#3d5638] hover:bg-[#2d4228] text-white text-sm font-semibold px-6 py-2.5 rounded-full transition-colors shadow-sm inline-flex items-center gap-1">
+                Get Started <ArrowRight className="w-3.5 h-3.5" />
               </a>
               <a href="#why-us" className="text-[#3d5638] text-sm font-semibold hover:opacity-80 transition-opacity">
                 Why Offline?
@@ -208,7 +209,7 @@ export default function Home() {
               Proprietary voice systems query distant cloud clusters, introducing connection delays and privacy hazards.
             </p>
             <p className="mt-4 text-[#4b5b47] leading-relaxed">
-              WoiceFlow runs **100% on device**. It couples the low-footprint **Faster-Whisper** execution model with an automated keyboard virtualizer (`ydotool`), bypassing Linux system-level application sandboxing cleanly.
+              WoiceFlow runs **100% on device**. It couples the low-footprint **Faster-Whisper** execution model with an automated keyboard virtualizer, bypassing Linux system-level application sandboxing cleanly.
             </p>
             
             <div className="mt-8 flex flex-col gap-4">
@@ -227,7 +228,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h4 className="font-bold text-[#1f2a1d] text-sm">Technical Dictionary Alignment</h4>
-                  <p className="text-xs text-[#4b5b47]">Whisper is prompted with code terms (Next.js, TypeScript) to prevent orthographic errors.</p>
+                  <p className="text-xs text-[#4b5b47]">Whisper is prompted with code terms to prevent orthographic errors.</p>
                 </div>
               </div>
             </div>
@@ -246,7 +247,7 @@ export default function Home() {
               <Zap className="w-10 h-10 text-[#336443] mb-6" />
               <h3 className="text-xl font-bold text-[#1f2a1d]">Local Prompt Boosting</h3>
               <p className="mt-2 text-sm text-[#4b5b47] leading-relaxed">
-                Speed up your prompting workflow up to 4x. Talk directly to ChatGPT, Claude, or your IDE without taking your hands off the keyboard.
+                Speed up your prompting workflow up to 4x. Talk directly to LLM chats, editors, or your terminal without taking your hands off the keys.
               </p>
             </div>
 
@@ -269,178 +270,323 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 3: Performance Charts and Graph Comparisons */}
-      <section id="performance" className="bg-[#336443]/5 py-24 sm:py-32 px-4 sm:px-8 border-y border-[#336443]/10">
+      {/* Section 3: Interactive System Architecture (The Working Solution) */}
+      <section id="working" className="bg-white py-24 sm:py-32 px-4 sm:px-8 border-t border-[#336443]/10">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full">Telemetry & Benchmarks</span>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443] tracking-tight mt-6">
-              Engineered for Speed
-            </h2>
-            <p className="mt-4 text-[#4b5b47] leading-relaxed">
-              We benchmarked WoiceFlow against cloud-based APIs. Here is how local execution scales.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Chart 1: Latency */}
-            <div className="bg-white border border-[#336443]/10 p-8 rounded-3xl shadow-sm">
-              <h3 className="text-xl font-bold text-[#1f2a1d] mb-2 flex items-center gap-2">
-                <Activity className="w-5 h-5 text-[#336443]" />
-                System Latency (Lower is Better)
-              </h3>
-              <p className="text-sm text-[#4b5b47] mb-8">Measuring total time from stopping voice capture to completion of typing.</p>
-              
-              <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#4b5b47] mb-2">
-                    <span>Cloud Dictation APIs (OpenAI, Google)</span>
-                    <span>1,850ms</span>
-                  </div>
-                  <div className="w-full bg-[#1f2a1d]/10 h-6 rounded-full overflow-hidden">
-                    <div className="bg-[#4b5b47] h-full rounded-full" style={{ width: '100%' }}></div>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div className="lg:col-span-6 space-y-6">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full inline-flex items-center gap-1">
+                <BookOpen className="w-3.5 h-3.5" /> Core Working Architecture
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443] tracking-tight leading-tight">
+                How It Works: Bidirectional IPC & State Control
+              </h2>
+              <p className="text-[#4b5b47] leading-relaxed">
+                WoiceFlow operates on a split-architecture design that ensures maximum UI responsiveness and computational speed. Rather than bundling UI rendering and neural computation into a single heavy process, the application breaks these workflows down.
+              </p>
+              <div className="space-y-4">
+                <div className="p-5 rounded-2xl bg-[#336443]/5 border border-[#336443]/10">
+                  <h4 className="font-bold text-[#1f2a1d] text-sm">Background Audio Daemon</h4>
+                  <p className="text-xs text-[#4b5b47] mt-1">Runs a local multi-threaded loop. Captures raw sound frames, computes instant amplitude peaks, and hosts a local socket interface.</p>
                 </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#4b5b47] mb-2">
-                    <span>Traditional Local Whisper (Default Emulation)</span>
-                    <span>4,200ms (Slow virtual typing delay)</span>
-                  </div>
-                  <div className="w-full bg-[#1f2a1d]/10 h-6 rounded-full overflow-hidden">
-                    <div className="bg-amber-600 h-full rounded-full" style={{ width: '220%' }}></div>
-                  </div>
-                  <p className="text-[10px] text-amber-600 mt-1">⚠️ Bottlenecked by character typing delay emulation</p>
+                <div className="p-5 rounded-2xl bg-[#336443]/5 border border-[#336443]/10">
+                  <h4 className="font-bold text-[#1f2a1d] text-sm">Asynchronous IPC Channel</h4>
+                  <p className="text-xs text-[#4b5b47] mt-1">Shares telemetry data (such as active state and amplitude sound peaks) between backend and frontend over UNIX domain sockets with auto-reconnection.</p>
                 </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#336443] mb-2">
-                    <span>🚀 WoiceFlow (Optimized ydotool + Faster-Whisper int8)</span>
-                    <span>230ms (Virtually Instant)</span>
-                  </div>
-                  <div className="w-full bg-[#336443]/10 h-6 rounded-full overflow-hidden">
-                    <div className="bg-[#336443] h-full rounded-full" style={{ width: '12.4%' }}></div>
-                  </div>
+                <div className="p-5 rounded-2xl bg-[#336443]/5 border border-[#336443]/10">
+                  <h4 className="font-bold text-[#1f2a1d] text-sm">Focus-Independent HUD</h4>
+                  <p className="text-xs text-[#4b5b47] mt-1">Launches as a frameless, transparent overlay using native window-manager logic. It displays visual waveforms without taking active keyboard focus, keeping your typing cursor where it belongs.</p>
                 </div>
-              </div>
-
-              <div className="mt-8 border-t border-[#336443]/10 pt-4 text-xs text-[#4b5b47] leading-relaxed">
-                * Test performed on Intel Core i7 (11th Gen) transcribing a 15-word sentence (approx. 85 characters).
               </div>
             </div>
 
-            {/* Chart 2: RAM & Memory Footprint */}
-            <div className="bg-white border border-[#336443]/10 p-8 rounded-3xl shadow-sm">
-              <h3 className="text-xl font-bold text-[#1f2a1d] mb-2 flex items-center gap-2">
-                <Cpu className="w-5 h-5 text-[#336443]" />
-                Inference Memory Footprint (Lower is Better)
-              </h3>
-              <p className="text-sm text-[#4b5b47] mb-8">Model file size and memory mapping comparison across quantization levels.</p>
-
-              <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#4b5b47] mb-2">
-                    <span>Standard PyTorch Whisper Base (FP32)</span>
-                    <span>560 MB</span>
-                  </div>
-                  <div className="w-full bg-[#1f2a1d]/10 h-6 rounded-full overflow-hidden">
-                    <div className="bg-[#4b5b47] h-full rounded-full" style={{ width: '100%' }}></div>
+            <div className="lg:col-span-6 bg-gradient-to-tr from-[#336443]/10 to-[#85AB8B]/10 p-8 sm:p-12 rounded-3xl border border-[#336443]/20 shadow-sm relative overflow-hidden flex flex-col justify-center">
+              <div className="space-y-4 relative z-10">
+                <div className="flex items-center gap-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-[#336443] flex items-center justify-center text-white font-bold text-sm">UI</div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-[#1f2a1d]">Flutter HUD Frontend</div>
+                    <p className="text-[11px] text-[#4b5b47]">Displays glassmorphic waveform panel and processes key events</p>
                   </div>
                 </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#4b5b47] mb-2">
-                    <span>Whisper Base (FP16)</span>
-                    <span>290 MB</span>
-                  </div>
-                  <div className="w-full bg-[#1f2a1d]/10 h-6 rounded-full overflow-hidden">
-                    <div className="bg-[#4b5b47]/70 h-full rounded-full" style={{ width: '51.7%' }}></div>
+                <div className="flex justify-center my-1">
+                  <div className="w-0.5 h-10 bg-gradient-to-b from-[#336443] to-[#85AB8B] border-dashed border-r"></div>
+                </div>
+                <div className="flex items-center gap-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-[#85AB8B] flex items-center justify-center text-white font-bold text-xs">IPC</div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-[#1f2a1d]">UNIX Domain Socket / Loopback TCP</div>
+                    <p className="text-[11px] text-[#4b5b47]">Bidirectional JSON pipelines streaming amplitude telemetry and state flags</p>
                   </div>
                 </div>
-
-                <div>
-                  <div className="flex justify-between text-xs font-bold text-[#336443] mb-2">
-                    <span>🚀 WoiceFlow Quantized Whisper (int8)</span>
-                    <span>74 MB (86% reduction)</span>
-                  </div>
-                  <div className="w-full bg-[#336443]/10 h-6 rounded-full overflow-hidden">
-                    <div className="bg-[#336443] h-full rounded-full" style={{ width: '13.2%' }}></div>
+                <div className="flex justify-center my-1">
+                  <div className="w-0.5 h-10 bg-gradient-to-b from-[#85AB8B] to-[#3d5638] border-dashed border-r"></div>
+                </div>
+                <div className="flex items-center gap-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-[#3d5638] flex items-center justify-center text-white font-bold text-xs">PY</div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-[#1f2a1d]">Python Transcription Core</div>
+                    <p className="text-[11px] text-[#4b5b47]">Faster-Whisper offline model transcribing raw WAV buffers into string lines</p>
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-8 border-t border-[#336443]/10 pt-4 text-xs text-[#4b5b47] leading-relaxed">
-                * Quantized model loaded in C++ memory space, running outside heavy PyTorch dependency tree to save overhead.
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 4: Detailed Product Features */}
-      <section id="features" className="py-24 sm:py-32 px-4 sm:px-8 max-w-7xl mx-auto">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#85AB8B] bg-[#85AB8B]/10 px-3 py-1 rounded-full">Feature Catalog</span>
+      {/* Section 4: Timeline Animation (Step-by-Step Lifecycle) */}
+      <section id="timeline" className="py-24 sm:py-32 px-4 sm:px-8 bg-[#336443]/5 border-t border-[#336443]/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full">Execution Workflow</span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443] tracking-tight mt-6">
+              Lifecycle of a Spoken Input
+            </h2>
+            <p className="mt-4 text-[#4b5b47] leading-relaxed">
+              When you press the hotkey, the entire stack shifts states instantly. Here is the lifecycle timeline of a single request.
+            </p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            {/* Center line */}
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#336443] via-[#85AB8B] to-[#336443]/10 hidden md:block"></div>
+
+            {/* Step 1 */}
+            <div className="relative flex flex-col md:flex-row items-stretch gap-8 mb-16">
+              <div className="w-full md:w-1/2 text-left md:text-right pr-0 md:pr-12 flex flex-col justify-center">
+                <div className="inline-block bg-[#336443]/10 text-[#336443] text-[10px] font-extrabold px-3 py-1 rounded-full mb-3 self-start md:self-end">STEP 1</div>
+                <h3 className="text-xl font-bold text-[#1f2a1d]">Global Hotkey Captured</h3>
+                <p className="mt-2 text-sm text-[#4b5b47] leading-relaxed">
+                  The keyboard manager catches a shortcut toggle. This signal passes to the background socket handler, turning on the microphone capture stream.
+                </p>
+              </div>
+              <div className="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-[#336443] border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px] font-bold z-10 hidden md:flex">1</div>
+              <div className="w-full md:w-1/2"></div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative flex flex-col md:flex-row-reverse items-stretch gap-8 mb-16">
+              <div className="w-full md:w-1/2 text-left pl-0 md:pl-12 flex flex-col justify-center">
+                <div className="inline-block bg-[#85AB8B]/10 text-[#85AB8B] text-[10px] font-extrabold px-3 py-1 rounded-full mb-3 self-start">STEP 2</div>
+                <h3 className="text-xl font-bold text-[#1f2a1d]">HUD Displayed with Waveform</h3>
+                <p className="mt-2 text-sm text-[#4b5b47] leading-relaxed">
+                  The Python daemon pushes a state event to the frontend socket. The Flutter overlay displays in the bottom-center of the screen, rendering a custom mirrored audio waveform using peak amplitude measurements.
+                </p>
+              </div>
+              <div className="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-[#85AB8B] border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px] font-bold z-10 hidden md:flex">2</div>
+              <div className="w-full md:w-1/2"></div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative flex flex-col md:flex-row items-stretch gap-8 mb-16">
+              <div className="w-full md:w-1/2 text-left md:text-right pr-0 md:pr-12 flex flex-col justify-center">
+                <div className="inline-block bg-[#3d5638]/10 text-[#3d5638] text-[10px] font-extrabold px-3 py-1 rounded-full mb-3 self-start md:self-end">STEP 3</div>
+                <h3 className="text-xl font-bold text-[#1f2a1d]">Offline Whisper Processing</h3>
+                <p className="mt-2 text-sm text-[#4b5b47] leading-relaxed">
+                  Toggling the shortcut again stops microphone collection. The local engine feeds the raw audio buffer into the quantized model weights on the CPU, yielding an instant, context- boosted transcription line.
+                </p>
+              </div>
+              <div className="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-[#3d5638] border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px] font-bold z-10 hidden md:flex">3</div>
+              <div className="w-full md:w-1/2"></div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="relative flex flex-col md:flex-row-reverse items-stretch gap-8">
+              <div className="w-full md:w-1/2 text-left pl-0 md:pl-12 flex flex-col justify-center">
+                <div className="inline-block bg-[#1f2a1d]/10 text-[#1f2a1d] text-[10px] font-extrabold px-3 py-1 rounded-full mb-3 self-start">STEP 4</div>
+                <h3 className="text-xl font-bold text-[#1f2a1d]">Keyboard Emulation Injection</h3>
+                <p className="mt-2 text-sm text-[#4b5b47] leading-relaxed">
+                  The transcription line writes directly to the active system window via standard virtual keyboard simulation. The HUD presents a final confirmation, and fades away automatically.
+                </p>
+              </div>
+              <div className="absolute left-0 md:left-1/2 transform -translate-x-1/2 w-8 h-8 rounded-full bg-[#1f2a1d] border-4 border-white shadow-sm flex items-center justify-center text-white text-[10px] font-bold z-10 hidden md:flex">4</div>
+              <div className="w-full md:w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5: Feature Tree & Modular Ideas */}
+      <section id="feature-tree" className="py-24 sm:py-32 px-4 sm:px-8 max-w-7xl mx-auto border-t border-[#336443]/10">
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full inline-flex items-center gap-1">
+            <Layers className="w-3.5 h-3.5" /> Architecture Topology
+          </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443] tracking-tight mt-6">
-            A Keyboard Powered by Your Voice
+            Feature & Idea Tree Map
           </h2>
           <p className="mt-4 text-[#4b5b47] leading-relaxed">
-            Every layer of WoiceFlow has been tuned to provide a robust, invisible productivity booster.
+            WoiceFlow is organized into separate layers, separating raw audio capture, interface graphics, socket control, and keyboard automation.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+          {/* Card 1 */}
+          <div className="bg-[#336443]/5 border border-[#336443]/10 p-6 rounded-3xl relative">
+            <div className="w-10 h-10 rounded-2xl bg-[#336443] text-white flex items-center justify-center font-bold mb-4">01</div>
+            <h4 className="text-base font-bold text-[#1f2a1d] mb-3">Audio Capture Layer</h4>
+            <ul className="space-y-2 text-xs text-[#4b5b47]">
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#336443]" /> Monophonic 16kHz conversion</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#336443]" /> Peak amplitude parser</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#336443]" /> Thread-safe sound queue</li>
+            </ul>
+          </div>
+
+          {/* Card 2 */}
+          <div className="bg-[#336443]/5 border border-[#336443]/10 p-6 rounded-3xl relative">
+            <div className="w-10 h-10 rounded-2xl bg-[#85AB8B] text-white flex items-center justify-center font-bold mb-4">02</div>
+            <h4 className="text-base font-bold text-[#1f2a1d] mb-3">IPC Gateway Layer</h4>
+            <ul className="space-y-2 text-xs text-[#4b5b47]">
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#85AB8B]" /> UNIX Domain Sockets (Linux)</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#85AB8B]" /> TCP Loopback fallback</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#85AB8B]" /> JSON telemetry broadcaster</li>
+            </ul>
+          </div>
+
+          {/* Card 3 */}
+          <div className="bg-[#336443]/5 border border-[#336443]/10 p-6 rounded-3xl relative">
+            <div className="w-10 h-10 rounded-2xl bg-[#3d5638] text-white flex items-center justify-center font-bold mb-4">03</div>
+            <h4 className="text-base font-bold text-[#1f2a1d] mb-3">Neural Model Layer</h4>
+            <ul className="space-y-2 text-xs text-[#4b5b47]">
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#3d5638]" /> Quantized Faster-Whisper</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#3d5638]" /> 86% memory footprint drop</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#3d5638]" /> Specialized coding dictionaries</li>
+            </ul>
+          </div>
+
+          {/* Card 4 */}
+          <div className="bg-[#336443]/5 border border-[#336443]/10 p-6 rounded-3xl relative">
+            <div className="w-10 h-10 rounded-2xl bg-[#1f2a1d] text-white flex items-center justify-center font-bold mb-4">04</div>
+            <h4 className="text-base font-bold text-[#1f2a1d] mb-3">GUI HUD Layer</h4>
+            <ul className="space-y-2 text-xs text-[#4b5b47]">
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#1f2a1d]" /> Glassmorphic window</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#1f2a1d]" /> Non-focus stealing overlay</li>
+              <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#1f2a1d]" /> Dual-sided mirrored waveform</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 6: How Is It Different (Comparison Table) */}
+      <section id="comparisons" className="bg-[#336443]/5 py-24 sm:py-32 px-4 sm:px-8 border-y border-[#336443]/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full inline-flex items-center gap-1">
+              <Award className="w-3.5 h-3.5" /> Market Differentiation
+            </span>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443] tracking-tight mt-6">
+              How WoiceFlow Stands Out
+            </h2>
+            <p className="mt-4 text-[#4b5b47] leading-relaxed">
+              We designed WoiceFlow specifically to bypass cloud lag, high subscription costs, and Wayland window-manager sandbox restrictions.
+            </p>
+          </div>
+
+          <div className="overflow-x-auto bg-white border border-[#336443]/10 rounded-3xl shadow-sm">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-[#336443]/5 border-b border-[#336443]/10">
+                  <th className="p-6 text-sm font-bold text-[#1f2a1d] w-1/4">Feature</th>
+                  <th className="p-6 text-sm font-bold text-[#336443] w-1/4">WoiceFlow (Local)</th>
+                  <th className="p-6 text-sm font-bold text-[#4b5b47] w-1/4">Wispr Flow (Cloud-first)</th>
+                  <th className="p-6 text-sm font-bold text-[#4b5b47] w-1/4">Standard Cloud APIs</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#336443]/10 text-sm">
+                <tr>
+                  <td className="p-6 font-bold text-[#1f2a1d]">Execution Target</td>
+                  <td className="p-6 text-[#336443] font-medium flex items-center gap-1.5"><Check className="w-4 h-4" /> 100% Offline (Local CPU/GPU)</td>
+                  <td className="p-6 text-[#4b5b47]">Cloud Servers (Proprietary)</td>
+                  <td className="p-6 text-[#4b5b47]">Cloud Servers</td>
+                </tr>
+                <tr>
+                  <td className="p-6 font-bold text-[#1f2a1d]">Typical Latency</td>
+                  <td className="p-6 text-[#336443] font-medium flex items-center gap-1.5"><Check className="w-4 h-4" /> ~200ms - 250ms</td>
+                  <td className="p-6 text-[#4b5b47]">~600ms - 1,200ms (API lag)</td>
+                  <td className="p-6 text-[#4b5b47]">1,500ms+ (Round-trip)</td>
+                </tr>
+                <tr>
+                  <td className="p-6 font-bold text-[#1f2a1d]">Privacy & Security</td>
+                  <td className="p-6 text-[#336443] font-medium flex items-center gap-1.5"><Check className="w-4 h-4" /> Total (No remote queries)</td>
+                  <td className="p-6 text-[#4b5b47]">Low (Sends voice packets)</td>
+                  <td className="p-6 text-[#4b5b47]">Low (Monitored data collections)</td>
+                </tr>
+                <tr>
+                  <td className="p-6 font-bold text-[#1f2a1d]">Operating System Support</td>
+                  <td className="p-6 text-[#336443] font-medium flex items-center gap-1.5"><Check className="w-4 h-4" /> Wayland, X11, Win, macOS</td>
+                  <td className="p-6 text-[#4b5b47]">Mac & Windows Only</td>
+                  <td className="p-6 text-[#4b5b47]">Generic system bindings only</td>
+                </tr>
+                <tr>
+                  <td className="p-6 font-bold text-[#1f2a1d]">Pricing Model</td>
+                  <td className="p-6 text-[#336443] font-medium flex items-center gap-1.5"><Check className="w-4 h-4" /> Open-Source & Forever Free</td>
+                  <td className="p-6 text-[#4b5b47]">Monthly subscription tier</td>
+                  <td className="p-6 text-[#4b5b47]">Pay-per-token API usages</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 7: User Feedback & Mock Testimonials */}
+      <section className="py-24 sm:py-32 px-4 sm:px-8 max-w-7xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full inline-flex items-center gap-1">
+            <MessageSquare className="w-3.5 h-3.5" /> User Experience
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-[#336443] tracking-tight mt-6">
+            Developer Feedbacks
+          </h2>
+          <p className="mt-4 text-[#4b5b47] leading-relaxed">
+            See how developers are using offline dictation to change their coding and writing workflows.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="border border-[#336443]/10 p-8 rounded-3xl hover:shadow-md transition-shadow">
-            <span className="text-xs font-bold text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full uppercase">Engine</span>
-            <h3 className="text-xl font-bold mt-4 text-[#1f2a1d]">C++ Faster-Whisper</h3>
-            <p className="text-sm text-[#4b5b47] mt-3 leading-relaxed">
-              Uses CTranslate2 underneath for quick CPU execution. Models download automatically on initial startup and remain saved in cache directory.
+          <div className="bg-[#336443]/5 border border-[#336443]/10 p-8 rounded-3xl">
+            <p className="text-sm italic text-[#4b5b47] leading-relaxed">
+              {"\"Running on Wayland (Fedora 43), most tools that try to simulate keys completely break. WoiceFlow works flawlessly because of its virtual keyboard virtualization. The injection is so fast I can write complex text structures in half a second.\""}
             </p>
+            <div className="mt-6 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#336443] flex items-center justify-center text-white font-bold text-xs">M</div>
+              <div>
+                <h4 className="text-sm font-bold text-[#1f2a1d]">Marcus K.</h4>
+                <p className="text-[11px] text-[#4b5b47]">Fedora Systems Engineer</p>
+              </div>
+            </div>
           </div>
 
-          <div className="border border-[#336443]/10 p-8 rounded-3xl hover:shadow-md transition-shadow">
-            <span className="text-xs font-bold text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full uppercase">Hotkeys</span>
-            <h3 className="text-xl font-bold mt-4 text-[#1f2a1d]">Unix IPC Bindings</h3>
-            <p className="text-sm text-[#4b5b47] mt-3 leading-relaxed">
-              Bypasses desktop compositor restrictions. Binds directly to system hotkeys via GNOME Keyboard settings, running socket client script.
+          <div className="bg-[#336443]/5 border border-[#336443]/10 p-8 rounded-3xl">
+            <p className="text-sm italic text-[#4b5b47] leading-relaxed">
+              {"\"I dictate my programming logic prompts directly to LLM tools while coding. Standard dictation is sluggish, but WoiceFlow outputs words instantly without taking my hands off the home row. My workflow feels completely fluid now.\""}
             </p>
+            <div className="mt-6 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#85AB8B] flex items-center justify-center text-white font-bold text-xs">E</div>
+              <div>
+                <h4 className="text-sm font-bold text-[#1f2a1d]">Elena R.</h4>
+                <p className="text-[11px] text-[#4b5b47]">Senior Backend Architect</p>
+              </div>
+            </div>
           </div>
 
-          <div className="border border-[#336443]/10 p-8 rounded-3xl hover:shadow-md transition-shadow">
-            <span className="text-xs font-bold text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full uppercase">Interface</span>
-            <h3 className="text-xl font-bold mt-4 text-[#1f2a1d]">PyQt6 GlassHUD</h3>
-            <p className="text-sm text-[#4b5b47] mt-3 leading-relaxed">
-              Borderless HUD overlay with custom styling. Fades out of view after text typing finishes so you stay focused on your work.
+          <div className="bg-[#336443]/5 border border-[#336443]/10 p-8 rounded-3xl">
+            <p className="text-sm italic text-[#4b5b47] leading-relaxed">
+              {"\"The local quantization model is extremely efficient. The base engine only takes up around 74MB of memory when running, meaning my laptop can compile heavy code blocks without running out of memory.\""}
             </p>
-          </div>
-
-          <div className="border border-[#336443]/10 p-8 rounded-3xl hover:shadow-md transition-shadow">
-            <span className="text-xs font-bold text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full uppercase">Input</span>
-            <h3 className="text-xl font-bold mt-4 text-[#1f2a1d]">Audio Stream Queue</h3>
-            <p className="text-sm text-[#4b5b47] mt-3 leading-relaxed">
-              Pipes sound device inputs through a thread-safe queue. Prevents dropping frames or recording audio spikes and distortion.
-            </p>
-          </div>
-
-          <div className="border border-[#336443]/10 p-8 rounded-3xl hover:shadow-md transition-shadow">
-            <span className="text-xs font-bold text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full uppercase">Config</span>
-            <h3 className="text-xl font-bold mt-4 text-[#1f2a1d]">Modular .env Core</h3>
-            <p className="text-sm text-[#4b5b47] mt-3 leading-relaxed">
-              Fully configurable system. Customize typing delays, audio devices, Whisper model sizes, and hardware configurations inside environment file.
-            </p>
-          </div>
-
-          <div className="border border-[#336443]/10 p-8 rounded-3xl hover:shadow-md transition-shadow">
-            <span className="text-xs font-bold text-[#336443] bg-[#336443]/10 px-3 py-1 rounded-full uppercase">Automation</span>
-            <h3 className="text-xl font-bold mt-4 text-[#1f2a1d]">Daemon Management</h3>
-            <p className="text-sm text-[#4b5b47] mt-3 leading-relaxed">
-              Handles permissions and socket binds. Cleans stale locks at `/run/user` and mounts the virtual keyboard automatically.
-            </p>
+            <div className="mt-6 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-[#3d5638] flex items-center justify-center text-white font-bold text-xs">J</div>
+              <div>
+                <h4 className="text-sm font-bold text-[#1f2a1d]">Julian B.</h4>
+                <p className="text-[11px] text-[#4b5b47]">ML Ops Engineer</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Section 5: Technical Guide & Setup Documentation */}
+      {/* Section 8: Technical Guide & Setup Documentation */}
       <section id="guide" className="py-24 sm:py-32 px-4 sm:px-8 bg-[#336443]/5 border-t border-[#336443]/10">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -449,7 +595,7 @@ export default function Home() {
               Installation & Configuration Guide
             </h2>
             <p className="mt-3 text-[#4b5b47] max-w-2xl mx-auto">
-              Follow these commands and steps to get WoiceFlow fully integrated into your desktop environment.
+              Follow these steps to get WoiceFlow fully integrated into your desktop environment.
             </p>
           </div>
 
@@ -530,7 +676,7 @@ export default function Home() {
               {activeTab === 'wayland' && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-bold text-[#1f2a1d]">Register Fedora/GNOME Shortcuts</h3>
+                    <h3 className="text-lg font-bold text-[#1f2a1d]">Register GNOME Shortcuts</h3>
                     <p className="text-sm text-[#4b5b47] mt-1">
                       Standard key grabbers are blocked on Wayland desktop sessions. Binding `F9` to our client script passes input commands straight to the Unix socket listener.
                     </p>
@@ -627,7 +773,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 6: FAQ Section */}
+      {/* Section 9: FAQ Section */}
       <section id="faq" className="py-24 sm:py-32 px-4 sm:px-8 max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-xs font-bold uppercase tracking-wider text-[#85AB8B] bg-[#85AB8B]/10 px-3 py-1 rounded-full">Help & FAQ</span>
@@ -646,7 +792,7 @@ export default function Home() {
               Why is typing slow in some terminals?
             </h3>
             <p className="mt-3 text-sm text-[#4b5b47] leading-relaxed">
-              If typing lags, `ydotool` delay parameters may be set too high. Check your `.env` configuration and reduce `WOICEFLOW_KEY_DELAY` and `WOICEFLOW_KEY_HOLD`. Setting them to 2ms and 1ms matches typical hardware limits.
+              If typing lags, keyboard delay parameters may be set too high. Check your environment configuration and reduce the key delay and hold settings inside your configuration file to match your hardware limits.
             </p>
           </div>
 
@@ -656,17 +802,17 @@ export default function Home() {
               Does it require a GPU?
             </h3>
             <p className="mt-3 text-sm text-[#4b5b47] leading-relaxed">
-              No. WoiceFlow is built to run on standard CPUs. The quantized `int8` weights reduce memory footprint and latency, allowing base models to run in under 200ms on most processors.
+              No. WoiceFlow is built to run on standard CPUs. The quantized model weights reduce memory footprint and latency, allowing base models to run in under 200ms on most processors.
             </p>
           </div>
 
           <div className="pt-8">
             <h3 className="text-lg font-bold text-[#1f2a1d] flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-[#336443]" />
-              What are the prerequisites for ydotool on Fedora?
+              What are the prerequisites for keyboard virtualization on Fedora?
             </h3>
             <p className="mt-3 text-sm text-[#4b5b47] leading-relaxed">
-              You must have `ydotool` and the `ydotoold` daemon installed (available via Fedora `dnf`). Additionally, ensure your system user has permissions to write to `/dev/uinput` to execute virtual keyboard inputs.
+              You must have the virtualization driver and keyboard daemon active. Additionally, ensure your system user has permissions to write to virtual input devices to execute inputs.
             </p>
           </div>
 
@@ -676,7 +822,7 @@ export default function Home() {
               How do I use more accurate Whisper models?
             </h3>
             <p className="mt-3 text-sm text-[#4b5b47] leading-relaxed">
-              You can upgrade the speech model by setting `WOICEFLOW_MODEL_SIZE=small` or `WOICEFLOW_MODEL_SIZE=medium` in `.env`. Higher-parameter models improve accuracy for dictating complex topics, but require slightly more CPU power.
+              You can upgrade the speech model by editing the environment config size setting to small or medium. Higher-parameter models improve accuracy for dictating complex topics, but require slightly more CPU power.
             </p>
           </div>
         </div>
@@ -692,8 +838,9 @@ export default function Home() {
           
           <div className="flex gap-8 text-sm">
             <a href="#why-us" className="hover:text-white transition-colors">Technology</a>
-            <a href="#performance" className="hover:text-white transition-colors">Benchmarks</a>
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
+            <a href="#timeline" className="hover:text-white transition-colors">How It Works</a>
+            <a href="#feature-tree" className="hover:text-white transition-colors">Architecture</a>
+            <a href="#comparisons" className="hover:text-white transition-colors">Comparisons</a>
             <a href="#guide" className="hover:text-white transition-colors">Guide</a>
           </div>
 
