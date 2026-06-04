@@ -3,8 +3,9 @@ import { Shield, Terminal, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function MacOSDocs() {
   return (
-    <div className="space-y-10 max-w-4xl">
-      <div className="space-y-4">
+    <div className="space-y-12 max-w-4xl scroll-smooth">
+      {/* Overview Section */}
+      <section id="overview" className="space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#85AB8B]/10 border border-[#85AB8B]/20">
           <Shield className="w-4 h-4 text-[#85AB8B]" />
           <span className="text-xs font-bold text-[#85AB8B] uppercase tracking-wider">macOS Daemon & Plist</span>
@@ -13,11 +14,11 @@ export default function MacOSDocs() {
         <p className="text-lg text-slate-300 leading-relaxed">
           WoiceFlow runs as a persistent background LaunchAgent plist service on macOS. This triggers automatic initialization when your user session loads and ensures the system remains alive in user-space.
         </p>
-      </div>
+      </section>
 
-      {/* Plist install block */}
-      <div className="p-6 rounded-2xl border border-white/5 bg-white/[0.02] space-y-4">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+      {/* Installer Section */}
+      <section id="installer" className="space-y-4 pt-6 border-t border-white/5">
+        <h2 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
           <Terminal className="w-5 h-5 text-[#85AB8B]" /> One-Command LaunchAgent Installer
         </h2>
         <p className="text-sm text-slate-300">
@@ -26,13 +27,13 @@ export default function MacOSDocs() {
         <div className="rounded-xl bg-black/60 border border-white/10 p-4 font-mono text-sm text-emerald-400 select-all overflow-x-auto">
           curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_macos.sh | bash
         </div>
-      </div>
+      </section>
 
-      {/* Daemon Structure */}
-      <div className="space-y-6 pt-6 border-t border-white/5">
+      {/* Launchd Section */}
+      <section id="launchd" className="space-y-4 pt-6 border-t border-white/5">
         <h2 className="text-2xl font-bold text-white tracking-tight">Understanding launchd Daemon</h2>
         <p className="text-slate-300 text-sm leading-relaxed">
-          The installation registers a plist configuration under your local LaunchAgents folder `~/Library/LaunchAgents/com.woiceflow.app.plist`. This plist configures the execution environment:
+          The installation registers a plist configuration under your local LaunchAgents folder <code className="text-slate-200">~/Library/LaunchAgents/com.woiceflow.app.plist</code>:
         </p>
         <div className="p-5 rounded-xl bg-black/60 border border-white/10 font-mono text-xs text-slate-300 overflow-x-auto leading-relaxed">
           &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />
@@ -50,11 +51,11 @@ export default function MacOSDocs() {
           &lt;/dict&gt;<br />
           &lt;/plist&gt;
         </div>
-      </div>
+      </section>
 
-      {/* macOS Security Restrictions */}
-      <div className="space-y-6 pt-6 border-t border-white/5">
-        <h2 className="text-2xl font-bold text-white tracking-tight">Crucial: Grant Accessibility & Microphone Permissions</h2>
+      {/* Troubleshooting Section */}
+      <section id="troubleshooting" className="space-y-4 pt-6 border-t border-white/5 pb-12">
+        <h2 className="text-2xl font-bold text-white tracking-tight">macOS Restrictions & Permissions</h2>
         <div className="space-y-4">
           <p className="text-slate-300 text-sm leading-relaxed">
             Due to macOS sandboxing and security regulations, synthetic keyboard inputs are blocked unless the parent application has been granted system accessibility permission.
@@ -65,11 +66,11 @@ export default function MacOSDocs() {
               <span className="font-bold block mb-1">Grant Accessibility Rights</span>
               1. Open **System Settings**.<br />
               2. Go to **Privacy & Security** &rarr; **Accessibility**.<br />
-              3. Enable **Terminal** (or whatever terminal wrapper you are executing from). If running compiled binary, add **WoiceFlow** to the allowed lists.
+              3. Enable **Terminal** (or your active terminal client). If running a compiled bundle, enable **WoiceFlow** in the list.
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
