@@ -1,0 +1,364 @@
+Starting WoiceFlow Production Launcher at Thu Jun  4 09:47:28 PM IST 2026
+Python backend running with PID: 62974
+Launching compiled Flutter HUD...
+2026-06-04 21:47:31.006 | INFO     | woiceflow.app:load_dotenv:371 - Loaded environment variables from .env file.
+2026-06-04 21:47:31.044 | INFO     | woiceflow.injector.typer:_ensure_ydotoold_running:27 - ydotoold daemon is already running.
+
+(com.woiceflow.woiceflow_desktop:63090): Atk-CRITICAL **: 21:47:31.076: atk_socket_embed: assertion 'plug_id != NULL' failed
+2026-06-04 21:47:31.118 | INFO     | woiceflow.app:__init__:178 - PyQt6 GUI HUD overlay loaded successfully.
+Starting WoiceFlow Voice Dictation...
+Pre-loading Faster-Whisper model (this might take a few seconds)...
+2026-06-04 21:47:31.123 | INFO     | woiceflow.speech.whisper_engine:load_model:28 - Loading Faster-Whisper model 'base' on 'cpu' with compute type 'int8'...
+Gdk-Message: 21:47:31.163: Unable to load  from the cursor theme
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+Failed to connect to IPC socket: SocketException: Connection failed (OS Error: No such file or directory, errno = 2), address = /run/user/1000/woiceflow.socket, port = 0
+2026-06-04 21:47:32.041 | SUCCESS  | woiceflow.speech.whisper_engine:load_model:40 - Faster-Whisper model 'base' loaded successfully.
+2026-06-04 21:47:32.041 | INFO     | woiceflow.hotkeys.listener:_run_listener:32 - Starting global hotkey listener for: <f9>
+2026-06-04 21:47:32.042 | DEBUG    | woiceflow.hotkeys.listener:start:53 - Hotkey listener thread spawned.
+2026-06-04 21:47:32.042 | INFO     | woiceflow.app:_listen_loop:51 - IPC Server started on Unix socket /run/user/1000/woiceflow.socket
+
+🚀 WoiceFlow is active and running!
+  • Press F9 to start recording.
+  • Speak your text.
+  • Press F9 again to stop, transcribe, and inject.
+  • Press Ctrl+C in this terminal to quit.
+
+2026-06-04 21:47:32.045 | INFO     | woiceflow.app:start:226 - Starting PyQt6 Event Loop...
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+2026-06-04 21:47:34.196 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+IPC Connection established successfully.
+2026-06-04 21:47:35.700 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:47:35.700 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:47:35.700 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:47:35.713 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:47:35.714 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:47:49.543 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:47:49.543 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:47:49.544 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:47:49.544 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:47:49.559 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 13.82 seconds of audio.
+Audio volume check: Peak amplitude is 1.0927
+2026-06-04 21:47:49.563 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:47:49.564 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 13.82s of audio...
+2026-06-04 21:47:50.642 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [0.85s -> 12.97s] ' Hello, tell me what is my name, how to work in production, or to make sure everything is working fine, just tell me in detail.'
+2026-06-04 21:47:50.642 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: 'Hello, tell me what is my name, how to work in production, or to make sure everything is working fine, just tell me in detail.'
+✨ Dictated: "Hello, tell me what is my name, how to work in production, or to 
+make sure everything is working fine, just tell me in detail."
+⌨️ Injecting text into active window...
+2026-06-04 21:47:50.644 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: 'Hello, tell me what is my name, how to work in production, or to make sure everything is working fine, just tell me in detail.' (delay: 2ms, hold: 1ms)
+2026-06-04 21:47:51.040 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-04 21:47:57.540 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:47:57.540 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:47:57.540 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:47:57.552 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:47:57.553 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:48:12.165 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:48:12.165 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:48:12.166 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:48:12.166 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:48:12.179 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 14.60 seconds of audio.
+Audio volume check: Peak amplitude is 1.1020
+2026-06-04 21:48:12.181 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:48:12.182 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 14.60s of audio...
+2026-06-04 21:48:13.055 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [1.07s -> 8.52s] ' Hello, are you my voice agent? Can you tell me how to work? What is your name? Tell me everything.'
+2026-06-04 21:48:13.056 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: 'Hello, are you my voice agent? Can you tell me how to work? What is your name? Tell me everything.'
+✨ Dictated: "Hello, are you my voice agent? Can you tell me how to work? What 
+is your name? Tell me everything."
+⌨️ Injecting text into active window...
+2026-06-04 21:48:13.057 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: 'Hello, are you my voice agent? Can you tell me how to work? What is your name? Tell me everything.' (delay: 2ms, hold: 1ms)
+2026-06-04 21:48:13.365 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-04 21:48:39.076 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:48:39.076 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:48:39.076 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:48:39.088 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:48:39.089 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:48:42.527 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:48:42.527 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:48:42.528 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:48:42.528 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:48:42.534 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 3.42 seconds of audio.
+Audio volume check: Peak amplitude is 1.1062
+2026-06-04 21:48:42.536 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:48:42.536 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 3.42s of audio...
+2026-06-04 21:48:46.932 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [0.59s -> 3.42s] ' Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello'
+2026-06-04 21:48:46.932 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: 'Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello'
+✨ Dictated: "Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. 
+Hello. Hello. Hello. Hello"
+⌨️ Injecting text into active window...
+2026-06-04 21:48:46.934 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: 'Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello. Hello' (delay: 2ms, hold: 1ms)
+2026-06-04 21:48:49.378 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-04 21:48:58.868 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:48:58.868 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:48:58.868 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:48:58.879 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:48:58.880 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:49:36.922 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:49:36.923 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:49:36.923 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:49:36.924 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:49:36.958 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 38.04 seconds of audio.
+Audio volume check: Peak amplitude is 1.1176
+2026-06-04 21:49:36.963 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:49:36.963 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 38.04s of audio...
+2026-06-04 21:49:38.427 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [1.20s -> 32.15s] " So basically, this UI of my Florida UI, it is positioned to the center of my screen, which acts like a distraction. I don't want to, you know, position it to the center of my screen. I wanted to move slightly to the middle only, but towards the bottom of my screen, you know, just like, you know, sort of 200 pixels to the bottom of my screen."
+2026-06-04 21:49:39.114 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [33.28s -> 35.28s] ' So can you try positioning it?'
+2026-06-04 21:49:39.117 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: "So basically, this UI of my Florida UI, it is positioned to the center of my screen, which acts like a distraction. I don't want to, you know, position it to the center of my screen. I wanted to move slightly to the middle only, but towards the bottom of my screen, you know, just like, you know, sort of 200 pixels to the bottom of my screen. So can you try positioning it?"
+✨ Dictated: "So basically, this UI of my Florida UI, it is positioned to the 
+center of my screen, which acts like a distraction. I don't want to, you know, 
+position it to the center of my screen. I wanted to move slightly to the middle 
+only, but towards the bottom of my screen, you know, just like, you know, sort 
+of 200 pixels to the bottom of my screen. So can you try positioning it?"
+⌨️ Injecting text into active window...
+2026-06-04 21:49:39.118 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: "So basically, this UI of my Florida UI, it is positioned to the center of my screen, which acts like a distraction. I don't want to, you know, position it to the center of my screen. I wanted to move slightly to the middle only, but towards the bottom of my screen, you know, just like, you know, sort of 200 pixels to the bottom of my screen. So can you try positioning it?" (delay: 2ms, hold: 1ms)
+2026-06-04 21:49:40.290 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-04 21:49:46.501 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:49:46.501 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:49:46.501 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:49:46.513 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:49:46.514 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:49:49.943 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:49:49.943 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:49:49.944 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:49:49.944 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:49:49.963 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 3.42 seconds of audio.
+Audio volume check: Peak amplitude is 1.1308
+2026-06-04 21:49:49.965 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:49:49.966 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 3.42s of audio...
+2026-06-04 21:49:49.973 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: ''
+❌ No speech recognized.
+
+Ready! Press F9 to record.
+2026-06-04 21:50:40.197 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:50:40.197 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:50:40.197 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:50:40.211 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:50:40.212 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+IPC Socket connection closed by backend.
+/usr/lib64/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-zcjinr30'}
+  warnings.warn(
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+Failed to connect to IPC socket: SocketException: Connection failed (OS Error: Connection refused, errno = 111), address = /run/user/1000/woiceflow.socket, port = 0
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+Failed to connect to IPC socket: SocketException: Connection failed (OS Error: Connection refused, errno = 111), address = /run/user/1000/woiceflow.socket, port = 0
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+Failed to connect to IPC socket: SocketException: Connection failed (OS Error: Connection refused, errno = 111), address = /run/user/1000/woiceflow.socket, port = 0
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+IPC Connection established successfully.
+embedder.cc (2575): 'FlutterEngineRemoveView' returned 'kInvalidArguments'. Remove view info was invalid. The implicit view cannot be removed.
+
+** (com.woiceflow.woiceflow_desktop:63090): WARNING **: 21:51:30.193: Failed to cleanup compositor shaders, unable to make OpenGL context current
+
+(com.woiceflow.woiceflow_desktop:63090): GLib-GObject-CRITICAL **: 21:51:30.201: invalid uninstantiatable type '<invalid>' in cast to 'FlTaskRunner'
+
+(com.woiceflow.woiceflow_desktop:63090): GLib-GObject-CRITICAL **: 21:51:30.201: g_object_ref: assertion 'G_IS_OBJECT (object)' failed
+./start_prod.sh: line 46: 63090 Segmentation fault         (core dumped) ./woiceflow_desktop
+Shutting down WoiceFlow processes...
+Starting WoiceFlow Production Launcher at Thu Jun  4 09:51:44 PM IST 2026
+Python backend running with PID: 66622
+Launching compiled Flutter HUD...
+
+(com.woiceflow.woiceflow_desktop:66668): Atk-CRITICAL **: 21:51:46.402: atk_socket_embed: assertion 'plug_id != NULL' failed
+2026-06-04 21:51:46.484 | INFO     | woiceflow.app:load_dotenv:371 - Loaded environment variables from .env file.
+Gdk-Message: 21:51:46.486: Unable to load  from the cursor theme
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+Failed to connect to IPC socket: SocketException: Connection failed (OS Error: Connection refused, errno = 111), address = /run/user/1000/woiceflow.socket, port = 0
+2026-06-04 21:51:46.524 | INFO     | woiceflow.injector.typer:_ensure_ydotoold_running:27 - ydotoold daemon is already running.
+2026-06-04 21:51:46.625 | INFO     | woiceflow.app:__init__:178 - PyQt6 GUI HUD overlay loaded successfully.
+Starting WoiceFlow Voice Dictation...
+Pre-loading Faster-Whisper model (this might take a few seconds)...
+2026-06-04 21:51:46.631 | INFO     | woiceflow.speech.whisper_engine:load_model:28 - Loading Faster-Whisper model 'base' on 'cpu' with compute type 'int8'...
+2026-06-04 21:51:47.609 | SUCCESS  | woiceflow.speech.whisper_engine:load_model:40 - Faster-Whisper model 'base' loaded successfully.
+2026-06-04 21:51:47.609 | INFO     | woiceflow.hotkeys.listener:_run_listener:32 - Starting global hotkey listener for: <f9>
+2026-06-04 21:51:47.610 | DEBUG    | woiceflow.hotkeys.listener:start:53 - Hotkey listener thread spawned.
+2026-06-04 21:51:47.611 | INFO     | woiceflow.app:_listen_loop:51 - IPC Server started on Unix socket /run/user/1000/woiceflow.socket
+
+🚀 WoiceFlow is active and running!
+  • Press F9 to start recording.
+  • Speak your text.
+  • Press F9 again to stop, transcribe, and inject.
+  • Press Ctrl+C in this terminal to quit.
+
+2026-06-04 21:51:47.614 | INFO     | woiceflow.app:start:226 - Starting PyQt6 Event Loop...
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+2026-06-04 21:51:49.521 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+IPC Connection established successfully.
+2026-06-04 21:51:55.529 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:51:55.530 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:51:55.530 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:51:55.542 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:51:55.543 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:51:57.133 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:51:57.133 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:51:57.134 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:51:57.134 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:51:57.138 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 1.58 seconds of audio.
+Audio volume check: Peak amplitude is 1.1146
+2026-06-04 21:51:57.140 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:51:57.140 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 1.58s of audio...
+2026-06-04 21:51:57.834 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [0.62s -> 1.62s] ' Hello.'
+2026-06-04 21:51:57.835 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: 'Hello.'
+✨ Dictated: "Hello."
+⌨️ Injecting text into active window...
+2026-06-04 21:51:57.836 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: 'Hello.' (delay: 2ms, hold: 1ms)
+2026-06-04 21:51:57.854 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+Shutting down WoiceFlow processes...
+2026-06-04 21:52:01.333 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+/usr/lib64/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-tjhdia0t'}
+  warnings.warn(
+Starting WoiceFlow Production Launcher at Thu Jun  4 09:52:14 PM IST 2026
+Python backend running with PID: 67322
+Launching compiled Flutter HUD...
+
+(com.woiceflow.woiceflow_desktop:67426): Atk-CRITICAL **: 21:52:16.338: atk_socket_embed: assertion 'plug_id != NULL' failed
+2026-06-04 21:52:16.419 | INFO     | woiceflow.app:load_dotenv:371 - Loaded environment variables from .env file.
+Gdk-Message: 21:52:16.421: Unable to load  from the cursor theme
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+Failed to connect to IPC socket: SocketException: Connection failed (OS Error: Connection refused, errno = 111), address = /run/user/1000/woiceflow.socket, port = 0
+2026-06-04 21:52:16.458 | INFO     | woiceflow.injector.typer:_ensure_ydotoold_running:27 - ydotoold daemon is already running.
+2026-06-04 21:52:16.536 | INFO     | woiceflow.app:__init__:178 - PyQt6 GUI HUD overlay loaded successfully.
+Starting WoiceFlow Voice Dictation...
+Pre-loading Faster-Whisper model (this might take a few seconds)...
+2026-06-04 21:52:16.544 | INFO     | woiceflow.speech.whisper_engine:load_model:28 - Loading Faster-Whisper model 'base' on 'cpu' with compute type 'int8'...
+2026-06-04 21:52:17.510 | SUCCESS  | woiceflow.speech.whisper_engine:load_model:40 - Faster-Whisper model 'base' loaded successfully.
+2026-06-04 21:52:17.511 | INFO     | woiceflow.hotkeys.listener:_run_listener:32 - Starting global hotkey listener for: <f9>
+2026-06-04 21:52:17.511 | DEBUG    | woiceflow.hotkeys.listener:start:53 - Hotkey listener thread spawned.
+2026-06-04 21:52:17.512 | INFO     | woiceflow.app:_listen_loop:51 - IPC Server started on Unix socket /run/user/1000/woiceflow.socket
+
+🚀 WoiceFlow is active and running!
+  • Press F9 to start recording.
+  • Speak your text.
+  • Press F9 again to stop, transcribe, and inject.
+  • Press Ctrl+C in this terminal to quit.
+
+2026-06-04 21:52:17.514 | INFO     | woiceflow.app:start:226 - Starting PyQt6 Event Loop...
+Connecting to IPC on Unix Socket: /run/user/1000/woiceflow.socket...
+2026-06-04 21:52:19.455 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+IPC Connection established successfully.
+2026-06-04 21:52:20.023 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:52:20.024 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:52:20.024 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:52:20.036 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:52:20.037 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:52:22.364 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:52:22.365 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:52:22.366 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:52:22.366 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:52:22.371 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 2.31 seconds of audio.
+Audio volume check: Peak amplitude is 1.1076
+2026-06-04 21:52:22.373 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:52:22.373 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 2.31s of audio...
+2026-06-04 21:52:23.150 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [0.50s -> 2.31s] ' Hello, hello, hello, hello.'
+2026-06-04 21:52:23.151 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: 'Hello, hello, hello, hello.'
+✨ Dictated: "Hello, hello, hello, hello."
+⌨️ Injecting text into active window...
+2026-06-04 21:52:23.152 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: 'Hello, hello, hello, hello.' (delay: 2ms, hold: 1ms)
+2026-06-04 21:52:23.236 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-04 21:52:25.341 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:52:25.341 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:52:25.341 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:52:25.354 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:52:25.354 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:52:27.743 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:52:27.743 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:52:27.744 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:52:27.745 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:52:27.749 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 2.39 seconds of audio.
+Audio volume check: Peak amplitude is 0.4079
+2026-06-04 21:52:27.751 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:52:27.751 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 2.39s of audio...
+2026-06-04 21:52:28.527 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [0.37s -> 2.22s] ' Hello, hello, hello, hello.'
+2026-06-04 21:52:28.527 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: 'Hello, hello, hello, hello.'
+✨ Dictated: "Hello, hello, hello, hello."
+⌨️ Injecting text into active window...
+2026-06-04 21:52:28.528 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: 'Hello, hello, hello, hello.' (delay: 2ms, hold: 1ms)
+2026-06-04 21:52:28.613 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-04 21:52:40.597 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:52:40.598 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:52:40.598 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:52:40.610 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:52:40.611 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:52:52.522 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:52:52.522 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:52:52.523 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:52:52.523 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:52:52.535 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 11.90 seconds of audio.
+Audio volume check: Peak amplitude is 1.1051
+2026-06-04 21:52:52.536 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:52:52.537 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 11.90s of audio...
+2026-06-04 21:52:53.189 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:113 - Transcribed segment: [2.19s -> 4.19s] ' Hello. Hello.'
+2026-06-04 21:52:53.189 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: 'Hello. Hello.'
+✨ Dictated: "Hello. Hello."
+⌨️ Injecting text into active window...
+2026-06-04 21:52:53.190 | INFO     | woiceflow.injector.typer:inject:81 - Injecting transcribed text: 'Hello. Hello.' (delay: 2ms, hold: 1ms)
+2026-06-04 21:52:53.231 | SUCCESS  | woiceflow.injector.typer:inject:105 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.

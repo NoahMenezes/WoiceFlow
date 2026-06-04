@@ -1,0 +1,43 @@
+name: Build Executables
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on version tags, e.g., v1.0.0
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.14'
+
+    - name: Install dependencies
+      run: |
+        uv venv
+        uv pip install -r pyproject.toml
+        uv pip install pyinstaller
+
+    - name: Build with PyInstaller
+      run: |
+        # Use uv run to execute pyinstaller within the environment
+        uv run pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: WoiceFlow-${{ runner.os }}
+        path: dist/WoiceFlow*
