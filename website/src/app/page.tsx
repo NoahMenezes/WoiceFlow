@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { LogIn, UserPlus, Play, Sparkles, Menu, X, Shield, Check, Copy, Terminal, Cpu, Keyboard, Volume2, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import BoomerangVideoBg from '@/components/BoomerangVideoBg';
+import { Terminal as MagicTerminal, AnimatedSpan, TypingAnimation } from '@/components/ui/terminal';
 
 const BG_VIDEO =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_131941_d136af49-e243-493a-be14-6ff3f24e09e6.mp4';
@@ -407,83 +408,144 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="bg-black/40 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 mt-12">
-              <h4 className="text-white font-semibold flex items-center gap-2"><Terminal className="w-5 h-5 text-[#85AB8B]"/> Developer Terminal Installation</h4>
-              {/* Tab Selector */}
-              <div className="flex gap-2 border-b border-white/10 pb-4 overflow-x-auto">
-                {(['fedora', 'ubuntu', 'arch'] as const).map((distro) => (
+            {/* 3 Terminals Showcase Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12 w-full max-w-7xl mx-auto">
+              
+              {/* Linux Terminal */}
+              <div className="relative group flex flex-col">
+                <div className="absolute right-4 top-14 z-20 flex items-center gap-2">
                   <button
-                    key={distro}
-                    onClick={() => setActiveTab(distro)}
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                      activeTab === distro
-                        ? 'bg-[#85AB8B] text-[#1f2a1d]'
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    {distro === 'fedora' ? 'Fedora GNOME' : distro === 'ubuntu' ? 'Ubuntu/Debian' : 'Arch Linux'}
-                  </button>
-                ))}
-              </div>
-
-              {/* Terminal Codeblock */}
-              <div className="relative rounded-2xl bg-black/60 border border-white/10 p-5 font-mono text-sm overflow-hidden group">
-                <div className="absolute right-4 top-4 flex items-center gap-2">
-                  <button
-                    onClick={() => handleCopy(
-                      activeTab === 'fedora'
-                        ? 'sudo dnf install -y python3-pip pipx portaudio-devel\npipx install woiceflow-hud\nwoiceflow-hud setup-gnome'
-                        : activeTab === 'ubuntu'
-                        ? 'sudo apt-get install -y python3-pip python3-venv libasound2-dev\npipx install woiceflow-hud\nwoiceflow-hud setup-gnome'
-                        : 'sudo pacman -S python-pip python-pipx portaudio\npipx install woiceflow-hud\nwoiceflow-hud setup-gnome'
-                    )}
-                    className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors"
+                    onClick={() => handleCopy('curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_linux.sh | bash')}
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors border border-white/10"
                     title="Copy command"
                   >
-                    {copiedText ? (
-                      <span className="text-xs text-[#85AB8B] font-sans font-semibold">Copied!</span>
+                    {copiedText === 'curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_linux.sh | bash' ? (
+                      <span className="text-xs text-[#85AB8B] font-semibold">Copied!</span>
                     ) : (
-                      <Copy className="w-4 h-4" />
+                      <Copy className="w-3.5 h-3.5" />
                     )}
                   </button>
                 </div>
-                <div className="text-white/40 mb-2 flex items-center gap-1.5 select-none">
-                  <Terminal className="w-4 h-4" />
-                  <span>Terminal</span>
+                
+                <div className="flex-1 flex flex-col min-h-[380px]">
+                  <MagicTerminal className="flex-1 border-white/10 bg-black/60 backdrop-blur-md font-mono w-full max-w-full text-emerald-400">
+                    <TypingAnimation className="text-white">&gt; curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_linux.sh | bash</TypingAnimation>
+                    
+                    <AnimatedSpan className="text-slate-400 mt-2" delay={1500}>
+                      🎙️ Installing WoiceFlow...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={2000}>
+                      Copying application files...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={2800}>
+                      Setting up Python virtual environment...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={4000}>
+                      Registering autostart shortcut...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={4800}>
+                      Starting WoiceFlow in the background...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-[#85AB8B] font-bold mt-2" delay={5500}>
+                      ✅ Installation successful! WoiceFlow is running.
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-white/80" delay={5800}>
+                      Press F9 anywhere to start dictating.
+                    </AnimatedSpan>
+                  </MagicTerminal>
                 </div>
-                <pre className="text-white overflow-x-auto whitespace-pre pr-12">
-                  {activeTab === 'fedora' && (
-                    <>
-                      <span className="text-[#85AB8B]"># Install system dependencies</span>{"\n"}
-                      sudo dnf install -y python3-pip pipx portaudio-devel{"\n\n"}
-                      <span className="text-[#85AB8B]"># Install offline HUD utility</span>{"\n"}
-                      pipx install woiceflow-hud{"\n\n"}
-                      <span className="text-[#85AB8B]"># Link Wayland virtual input virtualization</span>{"\n"}
-                      woiceflow-hud setup-gnome
-                    </>
-                  )}
-                  {activeTab === 'ubuntu' && (
-                    <>
-                      <span className="text-[#85AB8B]"># Install system dependencies</span>{"\n"}
-                      sudo apt-get install -y python3-pip python3-venv libasound2-dev{"\n\n"}
-                      <span className="text-[#85AB8B]"># Install offline HUD utility</span>{"\n"}
-                      pipx install woiceflow-hud{"\n\n"}
-                      <span className="text-[#85AB8B]"># Link Wayland virtual input virtualization</span>{"\n"}
-                      woiceflow-hud setup-gnome
-                    </>
-                  )}
-                  {activeTab === 'arch' && (
-                    <>
-                      <span className="text-[#85AB8B]"># Install system dependencies</span>{"\n"}
-                      sudo pacman -S python-pip python-pipx portaudio{"\n\n"}
-                      <span className="text-[#85AB8B]"># Install offline HUD utility</span>{"\n"}
-                      pipx install woiceflow-hud{"\n\n"}
-                      <span className="text-[#85AB8B]"># Link Wayland virtual input virtualization</span>{"\n"}
-                      woiceflow-hud setup-gnome
-                    </>
-                  )}
-                </pre>
               </div>
+
+              {/* macOS Terminal */}
+              <div className="relative group flex flex-col">
+                <div className="absolute right-4 top-14 z-20 flex items-center gap-2">
+                  <button
+                    onClick={() => handleCopy('curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_macos.sh | bash')}
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors border border-white/10"
+                    title="Copy command"
+                  >
+                    {copiedText === 'curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_macos.sh | bash' ? (
+                      <span className="text-xs text-[#85AB8B] font-semibold">Copied!</span>
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                </div>
+                
+                <div className="flex-1 flex flex-col min-h-[380px]">
+                  <MagicTerminal className="flex-1 border-white/10 bg-black/60 backdrop-blur-md font-mono w-full max-w-full text-emerald-400">
+                    <TypingAnimation className="text-white">&gt; curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_macos.sh | bash</TypingAnimation>
+                    
+                    <AnimatedSpan className="text-slate-400 mt-2" delay={1500}>
+                      🎙️ Installing WoiceFlow...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={2000}>
+                      Copying application files...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={2800}>
+                      Setting up Python virtual environment...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={4000}>
+                      Registering LaunchAgent...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={4800}>
+                      Starting WoiceFlow in the background...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-[#85AB8B] font-bold mt-2" delay={5500}>
+                      ✅ Installation successful! WoiceFlow is running.
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-white/80" delay={5800}>
+                      Press F9 anywhere to start dictating.
+                    </AnimatedSpan>
+                  </MagicTerminal>
+                </div>
+              </div>
+
+              {/* Windows Terminal */}
+              <div className="relative group flex flex-col">
+                <div className="absolute right-4 top-14 z-20 flex items-center gap-2">
+                  <button
+                    onClick={() => handleCopy('git clone https://github.com/NoahMenezes/WoiceFlow.git && cd WoiceFlow && pip install pyinstaller && pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py')}
+                    className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors border border-white/10"
+                    title="Copy command"
+                  >
+                    {copiedText === 'git clone https://github.com/NoahMenezes/WoiceFlow.git && cd WoiceFlow && pip install pyinstaller && pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py' ? (
+                      <span className="text-xs text-[#85AB8B] font-semibold">Copied!</span>
+                    ) : (
+                      <Copy className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                </div>
+                
+                <div className="flex-1 flex flex-col min-h-[380px]">
+                  <MagicTerminal className="flex-1 border-white/10 bg-black/60 backdrop-blur-md font-mono w-full max-w-full text-emerald-400">
+                    <TypingAnimation className="text-white">&gt; git clone https://github.com/NoahMenezes/WoiceFlow.git && cd WoiceFlow && pip install pyinstaller && pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py</TypingAnimation>
+                    
+                    <AnimatedSpan className="text-slate-400 mt-2" delay={1500}>
+                      Cloning into &apos;WoiceFlow&apos;...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={2000}>
+                      Installing pyinstaller...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={2800}>
+                      Building WoiceFlow executable...
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={3800}>
+                      INFO: PyInstaller: 6.4.0
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-slate-400" delay={4200}>
+                      INFO: Python: 3.11.2
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-[#85AB8B] font-bold mt-2" delay={5200}>
+                      ✅ WoiceFlow build completed successfully!
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-white/80" delay={5500}>
+                      Compile woiceflow-setup.iss to generate Setup.exe
+                    </AnimatedSpan>
+                  </MagicTerminal>
+                </div>
+              </div>
+
             </div>
           </div>
 
