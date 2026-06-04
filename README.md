@@ -70,10 +70,38 @@ uv pip install -e .
 
 ---
 
+## Production Installation (Run globally on F9)
+
+To install WoiceFlow so it runs silently in the background and activates globally with the **F9** hotkey (like a native desktop app):
+
+### 🐧 Linux
+Run this single command in your terminal to set up the environment, install dependencies, and register the app to start automatically on login:
+```bash
+curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_linux.sh | bash
+```
+
+### 🍏 macOS
+Run this command in your Terminal to clone, set up the background launch agent, and start it automatically on login:
+```bash
+curl -sSL https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_macos.sh | bash
+```
+
+### 🪟 Windows
+1. Make sure you have [Inno Setup](https://jrsoftware.org/isinfo.php) installed on your system.
+2. Build the executable using PyInstaller:
+   ```cmd
+   pip install pyinstaller
+   pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py
+   ```
+3. Compile the `woiceflow-setup.iss` file using Inno Setup Compiler. This will output a `WoiceFlow-Windows-Setup.exe` inside `installers/windows`.
+4. Run the installer. It will automatically add WoiceFlow to your Windows Startup sequence so it runs silently in the background on boot.
+
+---
+
 ## Usage Workflow
 
-1. Start the app. Wait for `Faster-Whisper model 'base' loaded successfully` in the logs.
-2. In any application (e.g. browser, text editor, terminal), press **F9** once to start recording.
-3. Speak clearly into your microphone.
-4. Press **F9** again when done.
-5. The audio is transcribed locally, and injected into the active text area.
+1. Press **F9** in any application (e.g. browser, text editor, terminal) to start recording silently.
+2. Speak clearly into your microphone.
+3. Press **F9** again when done.
+4. The audio is transcribed locally, and injected into the active text area.
+
