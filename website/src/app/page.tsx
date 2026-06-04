@@ -5,6 +5,7 @@ import { LogIn, UserPlus, Play, Sparkles, Menu, X, Shield, Check, Copy, Terminal
 import { motion } from 'framer-motion';
 import BoomerangVideoBg from '@/components/BoomerangVideoBg';
 import { Terminal as MagicTerminal, AnimatedSpan, TypingAnimation } from '@/components/ui/terminal';
+import Link from 'next/link';
 
 const BG_VIDEO =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_131941_d136af49-e243-493a-be14-6ff3f24e09e6.mp4';
@@ -385,27 +386,27 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-              <a href="/downloads/WoiceFlow-Windows.zip" className="bg-black/40 backdrop-blur-md border border-white/10 hover:border-[#85AB8B]/50 hover:bg-black/60 text-white p-8 rounded-3xl transition-all duration-300 group flex flex-col items-center">
+              <Link href="/docs/windows" className="bg-black/40 backdrop-blur-md border border-white/10 hover:border-[#85AB8B]/50 hover:bg-black/60 text-white p-8 rounded-3xl transition-all duration-300 group flex flex-col items-center">
                 <div className="w-14 h-14 bg-[#85AB8B]/10 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                   <svg className="w-7 h-7 text-[#85AB8B]" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.951-1.801"/></svg>
                 </div>
                 <span className="font-semibold text-xl">Windows</span>
-                <span className="text-sm text-[#cbd5e1] mt-2">64-bit Standalone (.exe)</span>
-              </a>
-              <a href="/downloads/WoiceFlow-macOS.zip" className="bg-black/40 backdrop-blur-md border border-white/10 hover:border-[#85AB8B]/50 hover:bg-black/60 text-white p-8 rounded-3xl transition-all duration-300 group flex flex-col items-center">
+                <span className="text-sm text-[#cbd5e1] mt-2">Configuration & Compilation Guide</span>
+              </Link>
+              <Link href="/docs/macos" className="bg-black/40 backdrop-blur-md border border-white/10 hover:border-[#85AB8B]/50 hover:bg-black/60 text-white p-8 rounded-3xl transition-all duration-300 group flex flex-col items-center">
                 <div className="w-14 h-14 bg-[#85AB8B]/10 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                   <svg className="w-7 h-7 text-[#85AB8B]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.188 15.365c-.246.331-1.229 1.549-2.583 1.549-.174 0-1.127-.27-2.613-.27-1.464 0-2.316.27-2.613.27-1.396 0-2.348-1.218-2.583-1.549-2.511-3.666-2.128-9.083 1.055-10.74 1.583-.82 3.125-.806 3.654-.806.495 0 2.213.064 3.844.82 2.623 1.258 2.597 3.513 2.532 3.753-.028.118-2.03 1.185-1.954 3.541.066 1.848 1.488 2.502 1.621 2.571-.059.186-.681 2.105-1.85 3.86z"/></svg>
                 </div>
                 <span className="font-semibold text-xl">macOS</span>
-                <span className="text-sm text-[#cbd5e1] mt-2">Universal Binary (.dmg)</span>
-              </a>
-              <a href="/downloads/WoiceFlow-Linux.zip" className="bg-black/40 backdrop-blur-md border border-white/10 hover:border-[#85AB8B]/50 hover:bg-black/60 text-white p-8 rounded-3xl transition-all duration-300 group flex flex-col items-center">
+                <span className="text-sm text-[#cbd5e1] mt-2">Daemon Plist & Sandbox Setup</span>
+              </Link>
+              <Link href="/docs/linux" className="bg-black/40 backdrop-blur-md border border-white/10 hover:border-[#85AB8B]/50 hover:bg-black/60 text-white p-8 rounded-3xl transition-all duration-300 group flex flex-col items-center">
                 <div className="w-14 h-14 bg-[#85AB8B]/10 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
                   <Cpu className="w-7 h-7 text-[#85AB8B]" />
                 </div>
                 <span className="font-semibold text-xl">Linux</span>
-                <span className="text-sm text-[#cbd5e1] mt-2">Portable Executable</span>
-              </a>
+                <span className="text-sm text-[#cbd5e1] mt-2">Wayland Virtualizer & Autostart</span>
+              </Link>
             </div>
 
             {/* 3 Terminals Showcase Grid */}
