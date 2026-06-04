@@ -36,6 +36,10 @@ Source: "dist\WoiceFlow\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdir
 Name: "{group}\WoiceFlow"; Filename: "{app}\WoiceFlow.exe"
 Name: "{group}\{cm:UninstallProgram,WoiceFlow}"; Filename: "{uninstallexe}"
 Name: "{autodesktop}\WoiceFlow"; Filename: "{app}\WoiceFlow.exe"; Tasks: desktopicon
+Name: "{userstartup}\WoiceFlow"; Filename: "{app}\WoiceFlow.exe"
+
+[Registry]
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "WoiceFlow"; ValueData: """{app}\WoiceFlow.exe"""; Flags: uninsdeletevalue
 
 [Run]
 Filename: "{app}\WoiceFlow.exe"; Description: "{cm:LaunchProgram,WoiceFlow}"; Flags: nowait postinstall skipifsilent

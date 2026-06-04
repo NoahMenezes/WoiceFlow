@@ -169,16 +169,10 @@ class WoiceFlowApp:
         # Standard pynput listener (works natively on X11 / XWayland / active window)
         self.listener = HotkeyListener(hotkey_str="<f9>", on_trigger=self.toggle_recording)
 
-        # Initialize GUI Overlay if PyQt6 is available
-        self.use_gui = PYQT_AVAILABLE
-        if self.use_gui:
-            self.qt_app = QApplication.instance() or QApplication(sys.argv)
-            self.hud = DictationHUD()
-            self.hud_controller = HUDController(self.hud)
-            logger.info("PyQt6 GUI HUD overlay loaded successfully.")
-        else:
-            self.hud = None
-            self.hud_controller = None
+        # Initialize GUI Overlay if PyQt6 is available (Disabled for silent background execution)
+        self.use_gui = False
+        self.hud = None
+        self.hud_controller = None
 
     def start(self) -> None:
         """Starts the application, pre-loads the model, and enters the main loop."""
@@ -241,6 +235,8 @@ class WoiceFlowApp:
         with self.state_lock:
             if self.state == "recording":
                 self.ipc_server.broadcast("AmplitudeUpdated", {"amplitude": amplitude})
+                if self.use_gui and self.hud_controller:
+                    self.hud_controller.update_amplitude(amplitude)
 
     def toggle_recording(self) -> None:
         """Toggles the recording state. Thread-safe callback from HotkeyListener or IPC socket."""
@@ -260,7 +256,7 @@ class WoiceFlowApp:
                 self.ipc_server.broadcast("RecordingStopped")
                 self.ipc_server.broadcast("TranscribingStarted")
                 if self.use_gui:
-                    self.hud_controller.update_hud("transcribing", "⏳ Transcribing...")
+                    self.hud_controller.hide_hud()
                 # Run transcription & injection in a background thread to keep hotkey thread responsive
                 threading.Thread(target=self._process_and_inject, daemon=True).start()
             elif self.state == "transcribing":
@@ -329,8 +325,6 @@ class WoiceFlowApp:
             
             if success:
                 self.console.print("[bold green]✅ Text injected successfully![/bold green]")
-                if self.use_gui:
-                    self.hud_controller.update_hud("success", "✅ Text typed! 😊", 1500)
             else:
                 self.console.print(
                     "[bold red]❌ Injection failed. Please check if the 'ydotoold' daemon is running "
