@@ -362,3 +362,50 @@ Audio volume check: Peak amplitude is 1.1051
 ✅ Text injected successfully!
 
 Ready! Press F9 to record.
+2026-06-04 21:53:54.973 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:53:54.973 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:53:54.973 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:53:54.986 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:53:54.987 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:53:56.102 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:53:56.102 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:53:56.103 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:53:56.103 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:53:56.116 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 1.11 seconds of audio.
+Audio volume check: Peak amplitude is 1.1347
+2026-06-04 21:53:56.117 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:53:56.118 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 1.11s of audio...
+2026-06-04 21:53:56.122 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: ''
+❌ No speech recognized.
+
+Ready! Press F9 to record.
+2026-06-04 21:54:09.314 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:54:09.314 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+2026-06-04 21:54:09.314 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-04 21:54:09.326 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-04 21:54:09.326 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:54:10.415 | DEBUG    | woiceflow.app:_handle_client:69 - New IPC client connected.
+2026-06-04 21:54:10.415 | DEBUG    | woiceflow.app:_handle_client:86 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-04 21:54:10.416 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-04 21:54:10.416 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+2026-06-04 21:54:10.419 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 1.08 seconds of audio.
+Audio volume check: Peak amplitude is 1.0393
+2026-06-04 21:54:10.420 | DEBUG    | woiceflow.app:_process_and_inject:296 - Saved debug recording to last_recording.wav
+🎙️ Transcribing speech...
+2026-06-04 21:54:10.421 | INFO     | woiceflow.speech.whisper_engine:transcribe:94 - Starting transcription of 1.08s of audio...
+2026-06-04 21:54:10.425 | INFO     | woiceflow.speech.whisper_engine:transcribe:117 - Transcription finished. Result: ''
+❌ No speech recognized.
+
+Ready! Press F9 to record.
+2026-06-04 21:54:13.929 | DEBUG    | woiceflow.app:_handle_client:102 - IPC client disconnected.
+Terminated                 ./woiceflow_desktop
+Shutting down WoiceFlow processes...
+/usr/lib64/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-a_klaoo6'}
+  warnings.warn(

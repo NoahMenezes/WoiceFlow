@@ -18,12 +18,6 @@ else
     echo "✅ uv is installed."
 fi
 
-if ! command -v flutter &> /dev/null; then
-    echo "⚠️  flutter is not in PATH. Please install Flutter for the desktop HUD."
-else
-    echo "✅ Flutter is installed."
-fi
-
 if ! command -v bun &> /dev/null; then
     echo "⚠️  bun is not installed. Website setup requires bun."
 else
@@ -42,19 +36,6 @@ else
     source .venv/bin/activate
     pip install faster-whisper loguru numpy pynput pyqt6 rich scipy sounddevice
 fi
-
-echo ""
-echo "======================================"
-echo "3. Setting up Flutter HUD Desktop App..."
-echo "======================================"
-cd desktop
-if command -v flutter &> /dev/null; then
-    flutter pub get
-    flutter build linux
-else
-    echo "⏭️  Skipping Flutter build (Flutter not found in PATH)."
-fi
-cd ..
 
 echo ""
 echo "======================================"
