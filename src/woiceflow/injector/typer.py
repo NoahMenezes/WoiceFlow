@@ -6,19 +6,22 @@ from loguru import logger
 
 def _default_ydotool_socket() -> str:
     """Returns the ydotoold socket path, respecting XDG_RUNTIME_DIR for the current user."""
-    runtime_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
+    uid = str(os.getuid()) if hasattr(os, 'getuid') else "1000"
+    runtime_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{uid}")
     return os.path.join(runtime_dir, ".ydotool_socket")
 
 
 class TextInjector:
-    """Injects text into the active application using ydotool."""
+    """Injects text into the active application using ydotool (Linux) or pynput (fallback)."""
 
     def __init__(self, socket_path: str | None = None):
         self.socket_path = socket_path or _default_ydotool_socket()
         self._ydotool_path = shutil.which("ydotool")
 
         if not self._ydotool_path:
-            logger.warning("ydotool executable not found in PATH. Text injection will fail.")
+            logger.info("ydotool not found in PATH. Using cross-platform pynput.keyboard.Controller fallback.")
+            from pynput.keyboard import Controller
+            self._keyboard = Controller()
             return
 
         # Ensure the ydotoold daemon is running
@@ -74,13 +77,18 @@ class TextInjector:
         Injects the given text into the active window by piping it to ydotool.
         Returns True if successful, False otherwise.
         """
-        if not self._ydotool_path:
-            logger.error("Cannot inject text: ydotool is not installed or not in PATH.")
-            return False
-
         if not text:
             logger.debug("Empty text provided for injection. Skipping.")
             return True
+
+        if not self._ydotool_path:
+            try:
+                logger.info(f"Injecting text using pynput fallback: {text!r}")
+                self._keyboard.type(text)
+                return True
+            except Exception as e:
+                logger.error(f"Failed to inject text via pynput fallback: {e}")
+                return False
 
         import os
         key_delay = os.getenv("WOICEFLOW_KEY_DELAY", "2")
