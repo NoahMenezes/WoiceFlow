@@ -7,6 +7,8 @@ import os
 if sys.platform.startswith("linux"):
     os.environ["QT_QPA_PLATFORM"] = "xcb"
 
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import socket
 import time
 import threading
@@ -299,14 +301,15 @@ class WoiceFlowApp:
             try:
                 # Scale float32 to 16-bit integer
                 int_data = (audio_data * 32767).astype(np.int16)
-                with wave.open("last_recording.wav", "wb") as wf:
+                wav_path = os.path.join(PROJECT_ROOT, "last_recording.wav")
+                with wave.open(wav_path, "wb") as wf:
                     wf.setnchannels(1)
                     wf.setsampwidth(2)
                     wf.setframerate(self.recorder.sample_rate)
                     wf.writeframes(int_data.tobytes())
-                logger.debug("Saved debug recording to last_recording.wav")
+                logger.debug(f"Saved debug recording to {wav_path}")
             except Exception as e:
-                logger.error(f"Failed to save last_recording.wav: {e}")
+                logger.error(f"Failed to save debug recording: {e}")
 
             if peak_volume < 0.005:
                 self.console.print(
@@ -363,9 +366,10 @@ class WoiceFlowApp:
 def load_dotenv() -> None:
     """Simple in-house dotenv loader to set environment variables from a .env file."""
     import os
-    if os.path.exists(".env"):
+    env_path = os.path.join(PROJECT_ROOT, ".env")
+    if os.path.exists(env_path):
         try:
-            with open(".env", "r") as f:
+            with open(env_path, "r") as f:
                 for line in f:
                     line = line.strip()
                     if line and not line.startswith("#") and "=" in line:
@@ -377,9 +381,9 @@ def load_dotenv() -> None:
                         if key in ("HUGGINGFACE_ACCESS_TOKEN", "HF_TOKEN"):
                             os.environ["HF_TOKEN"] = val
                             os.environ["HUGGINGFACE_ACCESS_TOKEN"] = val
-            logger.info("Loaded environment variables from .env file.")
+            logger.info(f"Loaded environment variables from {env_path}")
         except Exception as e:
-            logger.warning(f"Failed to load .env file: {e}")
+            logger.warning(f"Failed to load environment variables from {env_path}: {e}")
 
 def main():
     load_dotenv()
