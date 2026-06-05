@@ -22,9 +22,11 @@ cat << 'EOF' > dist/WoiceFlow_Linux_Installer/install.sh
 set -e
 echo "Installing WoiceFlow..."
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # Copy executable to user's local bin
 mkdir -p ~/.local/bin/WoiceFlowApp
-cp -r ../WoiceFlow/* ~/.local/bin/WoiceFlowApp/
+cp -r "$DIR/WoiceFlow"/* ~/.local/bin/WoiceFlowApp/
 
 # Ensure executable permissions
 chmod +x ~/.local/bin/WoiceFlowApp/WoiceFlow

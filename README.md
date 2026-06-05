@@ -141,22 +141,21 @@ This will:
 
 ### 🪟 Windows
 
-1. Install [Python 3.11+](https://www.python.org/downloads/) and [PyInstaller](https://pyinstaller.org/):
+1. Install [Python 3.11+](https://www.python.org/downloads/).
+2. Build the standalone executable. You can either use the automated script:
+   ```cmd
+   build_windows.bat
+   ```
+   Or run it manually (using `python -m PyInstaller` ensures it runs correctly even if PyInstaller is not in your system PATH):
    ```cmd
    pip install pyinstaller
+   python -m PyInstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py
    ```
-
-2. Build the standalone executable:
-   ```cmd
-   pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py
-   ```
-
 3. Install [Inno Setup](https://jrsoftware.org/isinfo.php), then compile the installer:
    ```cmd
    iscc woiceflow-setup.iss
    ```
    This produces `WoiceFlow-Windows-Setup.exe` inside the `installers/windows` folder.
-
 4. Run the installer. WoiceFlow will be added to Windows Startup and run silently on boot.
 
 ---

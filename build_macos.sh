@@ -24,7 +24,7 @@ echo "Installing WoiceFlow..."
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Copy App to Applications
-cp -R "$DIR/../WoiceFlow.app" /Applications/
+cp -R "$DIR/WoiceFlow.app" /Applications/
 
 # Create LaunchAgent for Autostart
 mkdir -p ~/Library/LaunchAgents

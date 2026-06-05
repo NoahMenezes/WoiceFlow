@@ -27,7 +27,10 @@ class IPCServer:
 
     def __init__(self, callback, socket_path: str | None = None, port: int = 17005):
         self.callback = callback
-        uid = str(os.getuid()) if hasattr(os, 'getuid') else "1000"
+        try:
+            uid = os.getuid()
+        except AttributeError:
+            uid = 1000
         runtime_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{uid}")
         self.socket_path = socket_path or os.path.join(runtime_dir, "woiceflow.socket")
         self.port = port

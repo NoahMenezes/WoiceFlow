@@ -1,35 +1,50 @@
 import os
+import sys
 import subprocess
 import shutil
+import time
 from loguru import logger
+from pynput.keyboard import Controller
 
 
 def _default_ydotool_socket() -> str:
     """Returns the ydotoold socket path, respecting XDG_RUNTIME_DIR for the current user."""
-    uid = str(os.getuid()) if hasattr(os, 'getuid') else "1000"
+    if sys.platform.startswith("win32"):
+        return ""
+    try:
+        uid = os.getuid()
+    except AttributeError:
+        uid = 0
     runtime_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{uid}")
     return os.path.join(runtime_dir, ".ydotool_socket")
 
 
 class TextInjector:
-    """Injects text into the active application using ydotool (Linux) or pynput (fallback)."""
+    """Injects text into the active application using platform-specific methods."""
 
     def __init__(self, socket_path: str | None = None):
-        self.socket_path = socket_path or _default_ydotool_socket()
-        self._ydotool_path = shutil.which("ydotool")
+        self.platform = sys.platform
+        self._keyboard = Controller()
 
-        if not self._ydotool_path:
-            logger.info("ydotool not found in PATH. Using cross-platform pynput.keyboard.Controller fallback.")
-            from pynput.keyboard import Controller
-            self._keyboard = Controller()
-            return
+        if self.platform.startswith("linux"):
+            self.socket_path = socket_path or _default_ydotool_socket()
+            self._ydotool_path = shutil.which("ydotool")
 
-        # Ensure the ydotoold daemon is running
-        self._ensure_ydotoold_running()
+            if not self._ydotool_path:
+                logger.warning("ydotool executable not found in PATH. Text injection will fall back to pynput.")
+            else:
+                # Ensure the ydotoold daemon is running
+                self._ensure_ydotoold_running()
+        else:
+            self.socket_path = None
+            self._ydotool_path = None
+            logger.info(f"Initialized pynput injector for platform: {self.platform}")
 
     def _ensure_ydotoold_running(self) -> bool:
         """Checks if ydotoold is running and starts it if necessary, cleaning up stale sockets."""
-        
+        if not self.platform.startswith("linux"):
+            return False
+
         # 1. Check if ydotoold is already running
         try:
             result = subprocess.run(["pgrep", "-x", "ydotoold"], capture_output=True)
@@ -64,7 +79,6 @@ class TextInjector:
                 preexec_fn=os.setpgrp
             )
             # Give it a moment to initialize the socket file
-            import time
             time.sleep(0.5)
             logger.success("ydotoold daemon started successfully in the background.")
             return True
@@ -74,54 +88,52 @@ class TextInjector:
 
     def inject(self, text: str) -> bool:
         """
-        Injects the given text into the active window by piping it to ydotool.
+        Injects the given text into the active window.
+        Uses ydotool on Linux (with fallback to pynput) and pynput on other platforms.
         Returns True if successful, False otherwise.
         """
         if not text:
             logger.debug("Empty text provided for injection. Skipping.")
             return True
 
-        if not self._ydotool_path:
+        # If on Linux and ydotool is available, use it
+        if self.platform.startswith("linux") and self._ydotool_path:
+            key_delay = os.getenv("WOICEFLOW_KEY_DELAY", "2")
+            key_hold = os.getenv("WOICEFLOW_KEY_HOLD", "1")
+            logger.info(f"Injecting text using ydotool: {text!r} (delay: {key_delay}ms, hold: {key_hold}ms)")
+
+            cmd = [self._ydotool_path, "type", "-d", key_delay, "-H", key_hold, "-f", "-"]
+            env = os.environ.copy()
+            if self.socket_path:
+                env["YDOTOOL_SOCKET"] = self.socket_path
+
             try:
-                logger.info(f"Injecting text using pynput fallback: {text!r}")
-                self._keyboard.type(text)
-                return True
+                process = subprocess.Popen(
+                    cmd,
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    env=env
+                )
+                stdout, stderr = process.communicate(input=text)
+                
+                if process.returncode == 0:
+                    logger.success("Text successfully injected using ydotool.")
+                    return True
+                else:
+                    logger.error(f"ydotool failed with return code {process.returncode}: {stderr.strip()}")
+                    logger.warning("Falling back to pynput for text injection.")
             except Exception as e:
-                logger.error(f"Failed to inject text via pynput fallback: {e}")
-                return False
+                logger.exception(f"Failed to execute ydotool text injection: {e}")
+                logger.warning("Falling back to pynput for text injection.")
 
-        import os
-        key_delay = os.getenv("WOICEFLOW_KEY_DELAY", "2")
-        key_hold = os.getenv("WOICEFLOW_KEY_HOLD", "1")
-        logger.info(f"Injecting transcribed text: {text!r} (delay: {key_delay}ms, hold: {key_hold}ms)")
-
-        # Construct the command with optimized latency parameters
-        cmd = [self._ydotool_path, "type", "-d", key_delay, "-H", key_hold, "-f", "-"]
-        
-        # Prepare environment
-        import os
-        env = os.environ.copy()
-        if self.socket_path:
-            env["YDOTOOL_SOCKET"] = self.socket_path
-
+        # Fallback / Default injection using pynput
+        logger.info(f"Injecting text using pynput keyboard controller: {text!r}")
         try:
-            # We use Popen and stdin.write to write the text directly to stdin
-            process = subprocess.Popen(
-                cmd,
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                env=env
-            )
-            stdout, stderr = process.communicate(input=text)
-            
-            if process.returncode == 0:
-                logger.success("Text successfully injected using ydotool.")
-                return True
-            else:
-                logger.error(f"ydotool failed with return code {process.returncode}: {stderr.strip()}")
-                return False
+            self._keyboard.type(text)
+            logger.success("Text successfully injected using pynput.")
+            return True
         except Exception as e:
-            logger.exception(f"Failed to execute ydotool text injection: {e}")
+            logger.error(f"Failed to inject text using pynput: {e}")
             return False
