@@ -416,11 +416,11 @@ export default function Home() {
               <div className="relative group flex flex-col">
                 <div className="absolute right-4 top-14 z-20 flex items-center gap-2">
                   <button
-                    onClick={() => handleCopy('pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py')}
+                    onClick={() => handleCopy('curl -sSL -o install_windows.bat https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_windows.bat && install_windows.bat')}
                     className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors border border-white/10"
                     title="Copy command"
                   >
-                    {copiedText === 'pyinstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py' ? (
+                    {copiedText === 'curl -sSL -o install_windows.bat https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_windows.bat && install_windows.bat' ? (
                       <span className="text-xs text-[#85AB8B] font-semibold">Copied!</span>
                     ) : (
                       <Copy className="w-3.5 h-3.5" />
@@ -430,28 +430,28 @@ export default function Home() {
                 
                 <div className="flex-1 flex flex-col min-h-[380px]">
                   <MagicTerminal className="flex-1 border-white/10 bg-black/60 backdrop-blur-md font-mono w-full max-w-full text-emerald-400">
-                    <TypingAnimation className="text-white">&gt; pyinstaller --noconfirm --onedir --windowed --name &quot;WoiceFlow&quot; main.py</TypingAnimation>
+                    <TypingAnimation className="text-white">&gt; curl -sSL -o install_windows.bat https://raw.githubusercontent.com/NoahMenezes/WoiceFlow/main/install_windows.bat && install_windows.bat</TypingAnimation>
                     
                     <AnimatedSpan className="text-slate-400 mt-2" delay={1500}>
-                      INFO: PyInstaller: 6.4.0
+                      🎙️ Installing WoiceFlow...
                     </AnimatedSpan>
                     <AnimatedSpan className="text-slate-400" delay={2000}>
-                      INFO: Python: 3.11.2 (conda)
+                      Copying application files...
                     </AnimatedSpan>
-                    <AnimatedSpan className="text-slate-400" delay={2600}>
-                      INFO: Platform: Windows-10
-                    </AnimatedSpan>
-                    <AnimatedSpan className="text-slate-400" delay={3200}>
-                      INFO: Analyzing main.py dependencies...
+                    <AnimatedSpan className="text-slate-400" delay={2800}>
+                      Setting up Python virtual environment...
                     </AnimatedSpan>
                     <AnimatedSpan className="text-slate-400" delay={4000}>
-                      INFO: Building EXE...
+                      Installing dependencies...
                     </AnimatedSpan>
-                    <AnimatedSpan className="text-[#85AB8B] font-bold mt-2" delay={4800}>
-                      ✅ WoiceFlow build completed successfully!
+                    <AnimatedSpan className="text-slate-400" delay={4800}>
+                      Registering startup shortcut...
                     </AnimatedSpan>
-                    <AnimatedSpan className="text-white/80" delay={5200}>
-                      Output located in: .\dist\WoiceFlow\WoiceFlow.exe
+                    <AnimatedSpan className="text-[#85AB8B] font-bold mt-2" delay={5500}>
+                      ✅ Installation successful! WoiceFlow is running.
+                    </AnimatedSpan>
+                    <AnimatedSpan className="text-white/80" delay={5800}>
+                      Press F9 anywhere to start dictating.
                     </AnimatedSpan>
                   </MagicTerminal>
                 </div>

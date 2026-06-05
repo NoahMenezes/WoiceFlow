@@ -7,9 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const sections = [
   { id: 'overview', name: 'Windows Overview', icon: Compass },
-  { id: 'compile', name: 'PyInstaller Build', icon: Code2 },
-  { id: 'packaging', name: 'Inno Setup Package', icon: Layers },
-  { id: 'registry', name: 'Registry Autostart', icon: Terminal },
+  { id: 'install', name: 'One-Click Installer', icon: Code2 },
+  { id: 'how-it-works', name: 'How It Works', icon: Layers },
   { id: 'troubleshoot', name: 'Troubleshooting', icon: ShieldCheck },
 ];
 

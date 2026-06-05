@@ -63,7 +63,7 @@ export default function DocsPage() {
                 <ArrowRight className="w-4 h-4 text-slate-500 group-hover:translate-x-1 transition-transform ml-auto" />
               </div>
               <p className="text-xs text-slate-400 mt-3 leading-relaxed">
-                PyInstaller build scripts, Inno Setup executables, and Startup Registry entries.
+                Automated batch installer, autostart shortcut configuration, and background execution.
               </p>
             </div>
           </Link>
