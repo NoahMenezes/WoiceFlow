@@ -1,5 +1,12 @@
 import sys
 import os
+
+# Force Qt to use X11/XWayland platform integration on Linux. This ensures that
+# frameless window flags, translucency, click-through, and stays-on-top behaviors
+# work robustly and consistently under Wayland window managers like GNOME.
+if sys.platform.startswith("linux"):
+    os.environ["QT_QPA_PLATFORM"] = "xcb"
+
 import socket
 import time
 import threading
@@ -169,10 +176,18 @@ class WoiceFlowApp:
         # Standard pynput listener (works natively on X11 / XWayland / active window)
         self.listener = HotkeyListener(hotkey_str="<f9>", on_trigger=self.toggle_recording)
 
-        # Initialize GUI Overlay if PyQt6 is available (Disabled for silent background execution)
-        self.use_gui = False
+        # Initialize GUI Overlay if PyQt6 is available
+        self.use_gui = PYQT_AVAILABLE
         self.hud = None
         self.hud_controller = None
+        
+        if self.use_gui:
+            self.qt_app = QApplication.instance()
+            if not self.qt_app:
+                self.qt_app = QApplication(sys.argv)
+            self.qt_app.setQuitOnLastWindowClosed(False)
+            self.hud = DictationHUD()
+            self.hud_controller = HUDController(self.hud)
 
     def start(self) -> None:
         """Starts the application, pre-loads the model, and enters the main loop."""
@@ -256,7 +271,7 @@ class WoiceFlowApp:
                 self.ipc_server.broadcast("RecordingStopped")
                 self.ipc_server.broadcast("TranscribingStarted")
                 if self.use_gui:
-                    self.hud_controller.hide_hud()
+                    self.hud_controller.update_hud("transcribing", "⏳ Processing...")
                 # Run transcription & injection in a background thread to keep hotkey thread responsive
                 threading.Thread(target=self._process_and_inject, daemon=True).start()
             elif self.state == "transcribing":
@@ -272,7 +287,7 @@ class WoiceFlowApp:
                 self.console.print("[bold red]❌ No audio data captured.[/bold red]")
                 self.ipc_server.broadcast("ErrorOccurred", {"message": "No audio data captured."})
                 if self.use_gui:
-                    self.hud_controller.update_hud("success", "❌ No audio data captured.", 2000)
+                    self.hud_controller.update_hud("error", "❌ No audio data captured.", 2500)
                 return
 
             import numpy as np
@@ -310,7 +325,7 @@ class WoiceFlowApp:
                 self.console.print("[bold red]❌ No speech recognized.[/bold red]")
                 self.ipc_server.broadcast("ErrorOccurred", {"message": "No speech recognized."})
                 if self.use_gui:
-                    self.hud_controller.update_hud("success", "❌ No speech recognized.", 2000)
+                    self.hud_controller.update_hud("error", "❌ No speech recognized.", 2500)
                 return
 
             self.console.print(f"[bold green]✨ Dictated:[/bold green] \"[italic]{transcript}[/italic]\"")
@@ -318,7 +333,7 @@ class WoiceFlowApp:
             if self.use_gui:
                 # Truncate for overlay display if it's too long
                 display_text = transcript if len(transcript) < 40 else f"{transcript[:37]}..."
-                self.hud_controller.update_hud("transcribing", f"✨ {display_text}")
+                self.hud_controller.update_hud("success", f"✨ {display_text}", 2500)
             
             self.console.print("[bold blue]⌨️ Injecting text into active window...[/bold blue]")
             success = self.injector.inject(transcript)
@@ -332,14 +347,14 @@ class WoiceFlowApp:
                 )
                 self.ipc_server.broadcast("ErrorOccurred", {"message": "Text injection failed."})
                 if self.use_gui:
-                    self.hud_controller.update_hud("success", "❌ Injection failed! 😢", 2500)
+                    self.hud_controller.update_hud("error", "❌ Injection failed! 😢", 2500)
                 
         except Exception as e:
             logger.exception(f"Unhandled error in transcription pipeline: {e}")
             self.console.print(f"[bold red]❌ An error occurred: {e}[/bold red]")
             self.ipc_server.broadcast("ErrorOccurred", {"message": str(e)})
             if self.use_gui:
-                self.hud_controller.update_hud("success", f"❌ Error: {e}", 2500)
+                self.hud_controller.update_hud("error", f"❌ Error: {e}", 2500)
         finally:
             with self.state_lock:
                 self.state = "idle"
