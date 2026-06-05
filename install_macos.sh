@@ -42,6 +42,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
 pip install faster-whisper loguru numpy pynput pyqt6 rich scipy sounddevice
+pip install -e .
 
 # 5. Create macOS LaunchAgent for Autostart
 echo "Registering LaunchAgent..."

@@ -89,6 +89,7 @@ EOF
 
 # 6. Enable and start the systemd user service
 systemctl --user daemon-reload
+systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR
 systemctl --user enable "${SERVICE_NAME}.service"
 systemctl --user start "${SERVICE_NAME}.service"
 
