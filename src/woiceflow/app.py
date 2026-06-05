@@ -25,9 +25,10 @@ import json
 class IPCServer:
     """Listens on local sockets to communicate with frontends (Wayland & Windows compatibility)."""
 
-    def __init__(self, callback, socket_path: str = "/run/user/1000/woiceflow.socket", port: int = 17005):
+    def __init__(self, callback, socket_path: str | None = None, port: int = 17005):
         self.callback = callback
-        self.socket_path = socket_path
+        runtime_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
+        self.socket_path = socket_path or os.path.join(runtime_dir, "woiceflow.socket")
         self.port = port
         self.server_socket = None
         self.running = False

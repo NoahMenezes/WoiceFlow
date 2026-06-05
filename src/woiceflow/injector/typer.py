@@ -1,12 +1,20 @@
+import os
 import subprocess
 import shutil
 from loguru import logger
 
+
+def _default_ydotool_socket() -> str:
+    """Returns the ydotoold socket path, respecting XDG_RUNTIME_DIR for the current user."""
+    runtime_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
+    return os.path.join(runtime_dir, ".ydotool_socket")
+
+
 class TextInjector:
     """Injects text into the active application using ydotool."""
 
-    def __init__(self, socket_path: str = "/run/user/1000/.ydotool_socket"):
-        self.socket_path = socket_path
+    def __init__(self, socket_path: str | None = None):
+        self.socket_path = socket_path or _default_ydotool_socket()
         self._ydotool_path = shutil.which("ydotool")
 
         if not self._ydotool_path:
@@ -18,7 +26,6 @@ class TextInjector:
 
     def _ensure_ydotoold_running(self) -> bool:
         """Checks if ydotoold is running and starts it if necessary, cleaning up stale sockets."""
-        import os
         
         # 1. Check if ydotoold is already running
         try:
