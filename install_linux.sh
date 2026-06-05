@@ -64,4 +64,4 @@ nohup ./woiceflow.sh >/dev/null 2>&1 &
 
 echo "✅ Installation successful! WoiceFlow is running in the background."
 echo "Press F9 anywhere on your system to start dictation."
-EOF
+

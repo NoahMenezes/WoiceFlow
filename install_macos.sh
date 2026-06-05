@@ -72,4 +72,4 @@ launchctl load "$LAUNCH_AGENTS_DIR/com.woiceflow.app.plist"
 
 echo "✅ Installation successful! WoiceFlow is running in the background."
 echo "Press F9 anywhere on your system to start dictation."
-EOF
+
