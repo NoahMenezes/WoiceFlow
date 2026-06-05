@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import BoomerangVideoBg from '@/components/BoomerangVideoBg';
 import { Terminal as MagicTerminal, AnimatedSpan, TypingAnimation } from '@/components/ui/terminal';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const BG_VIDEO =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_131941_d136af49-e243-493a-be14-6ff3f24e09e6.mp4';
@@ -804,19 +805,19 @@ export default function Home() {
                     <div className="relative flex w-[calc(50%+0.875rem)] items-center justify-end gap-2">
                       <span className="block h-fit rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#cbd5e1] shadow-sm">Lead Dev</span>
                       <div className="ring-[#090a0f] size-7 ring-4 rounded-full overflow-hidden">
-                        <img className="size-full" src="https://avatars.githubusercontent.com/u/102558960?v=4" alt="Lead Dev" />
+                        <Image className="size-full" src="https://avatars.githubusercontent.com/u/102558960?v=4" alt="Lead Dev" width={28} height={28} />
                       </div>
                     </div>
                     <div className="relative ml-[calc(50%-1rem)] flex items-center gap-2">
                       <div className="ring-[#090a0f] size-8 ring-4 rounded-full overflow-hidden">
-                        <img className="size-full" src="https://avatars.githubusercontent.com/u/47919550?v=4" alt="HUD Designer" />
+                        <Image className="size-full" src="https://avatars.githubusercontent.com/u/47919550?v=4" alt="HUD Designer" width={32} height={32} />
                       </div>
                       <span className="block h-fit rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#cbd5e1] shadow-sm">HUD Designer</span>
                     </div>
                     <div className="relative flex w-[calc(50%+0.875rem)] items-center justify-end gap-2">
                       <span className="block h-fit rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-[#cbd5e1] shadow-sm">Core Virtualizer</span>
                       <div className="ring-[#090a0f] size-7 ring-4 rounded-full overflow-hidden">
-                        <img className="size-full" src="https://avatars.githubusercontent.com/u/31113941?v=4" alt="Core Virtualizer" />
+                        <Image className="size-full" src="https://avatars.githubusercontent.com/u/31113941?v=4" alt="Core Virtualizer" width={28} height={28} />
                       </div>
                     </div>
                   </div>

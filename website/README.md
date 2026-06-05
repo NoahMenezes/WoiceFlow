@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WoiceFlow — Website
+
+The marketing and documentation site for [WoiceFlow](https://github.com/NoahMenezes/WoiceFlow), built with **Next.js 16**, **Tailwind CSS v4**, and **Bun**.
+
+---
+
+## Tech Stack
+
+| Technology | Role |
+|---|---|
+| [Next.js 16](https://nextjs.org) (App Router) | React framework with server components |
+| [Tailwind CSS v4](https://tailwindcss.com) | Utility-first styling |
+| [Framer Motion](https://www.framer-motion.com) | Scroll & entrance animations |
+| [Lucide React](https://lucide.dev) | Icon set |
+| [Bun](https://bun.sh) | Package manager & build runtime |
+| TypeScript | Type safety across all components |
+
+---
+
+## Project Structure
+
+```
+website/
+│
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx              # Root layout (fonts, metadata)
+│   │   ├── globals.css             # Global styles & Tailwind config
+│   │   ├── page.tsx                # Homepage (hero, features, install, docs)
+│   │   └── docs/
+│   │       ├── layout.tsx          # Docs shared layout
+│   │       ├── page.tsx            # Docs index
+│   │       ├── linux/              # Linux setup guide
+│   │       ├── macos/              # macOS setup guide
+│   │       └── windows/            # Windows setup guide
+│   │
+│   └── components/
+│       ├── BoomerangVideoBg.tsx    # Seamless looping hero video component
+│       └── ui/
+│           └── terminal.tsx        # Animated terminal component
+│
+├── public/                         # Static assets
+├── package.json
+├── next.config.ts
+├── tsconfig.json
+└── eslint.config.mjs
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- [Bun](https://bun.sh) — install with:
+  ```bash
+  curl -fsSL https://bun.sh/install | bash
+  ```
+- Node.js 18+ (used by Next.js internally)
+
+### Install Dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Run the Development Server
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+bun run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+### Build for Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+bun run build
+bun run start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Lint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+bun run lint
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Page Sections
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The homepage (`src/app/page.tsx`) is organized into the following sections:
+
+| Section | Anchor | Description |
+|---|---|---|
+| Hero | — | Full-screen video background with headline |
+| Why Offline? | `#why` | Privacy & performance argument with animated lamp graphic |
+| Comparison | `#compare` | WoiceFlow vs. cloud dictation vs. manual typing |
+| Installation | `#setup` | One-line install commands for Linux, macOS, and Windows |
+| Configuration | — | Environment variables & key bindings guide |
+| Architecture | — | Tech stack overview |
+| Features | — | Bento-grid feature cards |
+
+---
+
+## Adding a New Docs Page
+
+1. Create a folder under `src/app/docs/`:
+   ```
+   src/app/docs/my-topic/
+   └── page.tsx
+   ```
+
+2. Export a default React component with your content.
+
+3. Link to it from `src/app/docs/page.tsx` or from the homepage install section.
+
+---
+
+## Environment Variables
+
+No environment variables are required to run the website locally. All content is statically rendered.
+
+---
+
+## Deployment
+
+The site can be deployed on any platform that supports Next.js:
+
+- **Vercel** (recommended): Connect your GitHub repo and deploy automatically.
+- **Self-hosted**: Run `bun run build` then `bun run start` on your server.
+- **Static export** (optional): Configure `output: 'export'` in `next.config.ts` for a fully static build.
+
+---
+
+## Contributing
+
+See the [root README](../README.md) for contribution guidelines.
