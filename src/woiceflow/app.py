@@ -1,11 +1,16 @@
 import sys
 import os
 
-# Force Qt to use X11/XWayland platform integration on Linux. This ensures that
-# frameless window flags, translucency, click-through, and stays-on-top behaviors
-# work robustly and consistently under Wayland window managers like GNOME.
+# On Linux under a Wayland compositor, force Qt to use the XWayland (xcb) backend.
+# This ensures frameless window flags, translucency, click-through, and stays-on-top
+# all work reliably via XWayland. We only apply this when:
+#   - The platform is Linux
+#   - The session is Wayland (WAYLAND_DISPLAY is set)
+#   - The user hasn't already overridden QT_QPA_PLATFORM themselves
+# On X11-only, macOS, and Windows we leave Qt's default platform plugin alone.
 if sys.platform.startswith("linux"):
-    os.environ["QT_QPA_PLATFORM"] = "xcb"
+    if os.environ.get("WAYLAND_DISPLAY") and not os.environ.get("QT_QPA_PLATFORM"):
+        os.environ["QT_QPA_PLATFORM"] = "xcb"
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

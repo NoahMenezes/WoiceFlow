@@ -45,12 +45,27 @@ class TextInjector:
         if not self.platform.startswith("linux"):
             return False
 
-        # 1. Check if ydotoold is already running
+        # 1. Check if ydotoold is already running (pgrep is POSIX-standard, but guard anyway)
         try:
-            result = subprocess.run(["pgrep", "-x", "ydotoold"], capture_output=True)
+            result = subprocess.run(
+                ["pgrep", "-x", "ydotoold"],
+                capture_output=True
+            )
             if result.returncode == 0:
                 logger.info("ydotoold daemon is already running.")
                 return True
+        except FileNotFoundError:
+            # pgrep not available on this distro — check via ps instead
+            try:
+                result = subprocess.run(
+                    ["ps", "-eo", "comm"],
+                    capture_output=True, text=True
+                )
+                if "ydotoold" in result.stdout:
+                    logger.info("ydotoold daemon is already running (detected via ps).")
+                    return True
+            except Exception:
+                pass
         except Exception:
             pass
 
@@ -71,12 +86,18 @@ class TextInjector:
             return False
 
         try:
-            # We start the daemon detached from the parent process group so it lives on
+            # Detach daemon from our process group so it survives WoiceFlow restarts
+            kwargs = {}
+            if os.name == "posix":
+                kwargs["preexec_fn"] = os.setpgrp
+            elif os.name == "nt":
+                kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
+
             subprocess.Popen(
                 [ydotoold_path, f"--socket-path={self.socket_path}"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-                preexec_fn=os.setpgrp
+                **kwargs
             )
             # Give it a moment to initialize the socket file
             time.sleep(0.5)
