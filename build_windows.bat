@@ -17,9 +17,9 @@ if %errorlevel% neq 0 (
     pip install pyinstaller
 )
 
-:: Build single directory application
-echo Running PyInstaller...
-python -m PyInstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py
+:: Build single directory application using the spec file
+echo Running PyInstaller with WoiceFlow.spec...
+python -m PyInstaller --noconfirm WoiceFlow.spec
 
 if %errorlevel% neq 0 (
     echo Error: PyInstaller build failed.

@@ -141,22 +141,33 @@ This will:
 
 ### 🪟 Windows
 
-1. Install [Python 3.11+](https://www.python.org/downloads/).
-2. Build the standalone executable. You can either use the automated script:
+You have two options to install and run WoiceFlow on Windows:
+
+#### Option A: Quick Automated Installer (Recommended)
+This mirrors the Linux and macOS setups by installing the application locally and running it via a lightweight, silent Python background process.
+1. Download or clone this repository to your machine.
+2. Double-click or run the installer:
+   ```cmd
+   install_windows.bat
+   ```
+   This will:
+   * Automatically install Python 3.12 via `winget` if it is not already installed.
+   * Sync all application source files to `%APPDATA%\woiceflow`.
+   * Create a Python virtual environment and install all package dependencies.
+   * Add a Desktop shortcut and a Windows Startup folder entry to automatically and silently start the dictation app in the background when you log in (using `pythonw.exe` to prevent terminal window popups).
+
+#### Option B: Standalone `.exe` Packaging (PyInstaller + Inno Setup)
+If you want to package the app into a standalone executable or distribute it as a classic setup wizard installer:
+1. Ensure Python 3.10+ is installed.
+2. Build the standalone executable using the automated build script (which compiles using the custom `WoiceFlow.spec` to correctly gather complex dependencies like `faster-whisper`, `ctranslate2`, and `sounddevice`):
    ```cmd
    build_windows.bat
    ```
-   Or run it manually (using `python -m PyInstaller` ensures it runs correctly even if PyInstaller is not in your system PATH):
-   ```cmd
-   pip install pyinstaller
-   python -m PyInstaller --noconfirm --onedir --windowed --name "WoiceFlow" main.py
-   ```
-3. Install [Inno Setup](https://jrsoftware.org/isinfo.php), then compile the installer:
+3. To package the compiled output into a setup wizard installer, install [Inno Setup](https://jrsoftware.org/isinfo.php), and compile:
    ```cmd
    iscc woiceflow-setup.iss
    ```
-   This produces `WoiceFlow-Windows-Setup.exe` inside the `installers/windows` folder.
-4. Run the installer. WoiceFlow will be added to Windows Startup and run silently on boot.
+   This will output `WoiceFlow-Windows-Setup.exe` inside `installers/windows`.
 
 ---
 
