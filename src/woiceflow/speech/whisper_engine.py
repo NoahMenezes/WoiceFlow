@@ -80,6 +80,57 @@ class WhisperEngine:
             
         return corrected
 
+    def _filter_audio(self, audio_data: np.ndarray, fs: int = 16000) -> np.ndarray:
+        """
+        Applies a human speech bandpass filter (150Hz - 3400Hz) and a spectral subtraction
+        gating algorithm to clean background music and steady-state ambient noise.
+        """
+        if len(audio_data) < 512:
+            return audio_data
+
+        try:
+            from scipy.signal import butter, lfilter, stft, istft
+            
+            # 1. Butterworth Bandpass Filter (human speech harmonics)
+            nyq = 0.5 * fs
+            low = 150.0 / nyq
+            high = 3400.0 / nyq
+            b, a = butter(5, [low, high], btype='band')
+            filtered = lfilter(b, a, audio_data)
+            
+            # 2. Spectral Subtraction (Music & Background Noise removal)
+            frequencies, times, Zxx = stft(filtered, fs, nperseg=512, noverlap=384)
+            magnitude = np.abs(Zxx)
+            phase = np.angle(Zxx)
+            
+            # Estimate background noise profile from the lowest energy frames
+            frame_energies = np.sum(magnitude ** 2, axis=0)
+            num_noise_frames = max(1, len(frame_energies) // 7)
+            noise_frame_indices = np.argsort(frame_energies)[:num_noise_frames]
+            noise_spectrum = np.mean(magnitude[:, noise_frame_indices], axis=1, keepdims=True)
+            
+            # Subtract noise profile using an over-subtraction factor of 2.5
+            alpha = 2.5
+            beta = 0.01  # Spectral floor
+            
+            subtracted_magnitude = magnitude - alpha * noise_spectrum
+            subtracted_magnitude = np.maximum(subtracted_magnitude, beta * magnitude)
+            
+            # Reconstruct and inverse transform
+            Zxx_clean = subtracted_magnitude * np.exp(1j * phase)
+            _, clean_audio = istft(Zxx_clean, fs, nperseg=512, noverlap=384)
+            
+            # Keep length aligned to input
+            if len(clean_audio) > len(audio_data):
+                clean_audio = clean_audio[:len(audio_data)]
+            elif len(clean_audio) < len(audio_data):
+                clean_audio = np.pad(clean_audio, (0, len(audio_data) - len(clean_audio)))
+                
+            return clean_audio.astype(np.float32)
+        except Exception as e:
+            logger.warning(f"Audio pre-filtering failed, falling back to raw audio: {e}")
+            return audio_data
+
     def transcribe(self, audio_data: np.ndarray, sample_rate: int = 16000) -> str:
         """
         Transcribes the input audio data (numpy array).
@@ -90,6 +141,9 @@ class WhisperEngine:
 
         # Ensure the model is loaded (for type checkers)
         assert self._model is not None
+
+        # Pre-filter background music and noise to isolate voice
+        audio_data = self._filter_audio(audio_data, sample_rate)
 
         logger.info(f"Starting transcription of {len(audio_data) / sample_rate:.2f}s of audio...")
 
