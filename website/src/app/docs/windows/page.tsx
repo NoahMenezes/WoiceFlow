@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, Shield, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import { Terminal, AlertCircle, Sparkles } from 'lucide-react';
 
 export default function WindowsDocs() {
   return (

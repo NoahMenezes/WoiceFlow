@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Terminal, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Cpu, Terminal, AlertCircle } from 'lucide-react';
 
 export default function LinuxDocs() {
   return (

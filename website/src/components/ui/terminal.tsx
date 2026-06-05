@@ -79,17 +79,14 @@ export const AnimatedSpan = ({
 
   const sequence = useSequence()
   const itemIndex = useItemIndex()
-  const [hasStarted, setHasStarted] = useState(false)
-  useEffect(() => {
-    if (!sequence || itemIndex === null) return
-    if (!sequence.sequenceStarted) return
-    if (hasStarted) return
-    if (sequence.activeIndex === itemIndex) {
-      setHasStarted(true)
-    }
-  }, [sequence, hasStarted, itemIndex])
 
-  const shouldAnimate = sequence ? hasStarted : startOnView ? isInView : true
+  const isSequenceActive =
+    sequence &&
+    itemIndex !== null &&
+    sequence.sequenceStarted &&
+    sequence.activeIndex >= itemIndex
+
+  const shouldAnimate = sequence ? isSequenceActive : startOnView ? isInView : true
 
   return (
     <motion.div
@@ -160,13 +157,11 @@ export const TypingAnimation = ({
   }, [sequence?.completeItem, itemIndex])
 
   useEffect(() => {
+    if (hasSequence && itemIndex !== null) return
+
     let startTimeout: ReturnType<typeof setTimeout> | null = null
 
-    if (hasSequence && itemIndex !== null) {
-      if (sequenceStarted && !started && sequenceActiveIndex === itemIndex) {
-        setStarted(true)
-      }
-    } else if (!startOnView || isInView) {
+    if (!startOnView || isInView) {
       startTimeout = setTimeout(() => setStarted(true), delay)
     }
 
@@ -179,17 +174,21 @@ export const TypingAnimation = ({
     delay,
     startOnView,
     isInView,
-    started,
     hasSequence,
-    sequenceActiveIndex,
-    sequenceStarted,
     itemIndex,
   ])
+
+  const isStarted =
+    hasSequence && itemIndex !== null
+      ? sequenceStarted &&
+        sequenceActiveIndex !== null &&
+        sequenceActiveIndex >= itemIndex
+      : started
 
   useEffect(() => {
     let typingEffect: ReturnType<typeof setInterval> | null = null
 
-    if (started) {
+    if (isStarted) {
       let i = 0
       typingEffect = setInterval(() => {
         if (i < children.length) {
@@ -213,7 +212,7 @@ export const TypingAnimation = ({
         clearInterval(typingEffect)
       }
     }
-  }, [children, duration, started])
+  }, [children, duration, isStarted])
 
   return (
     <MotionComponent

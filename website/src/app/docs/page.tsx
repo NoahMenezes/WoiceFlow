@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Cpu, Terminal, Shield, ArrowRight, BookOpen, Volume2, Key, Sparkles } from 'lucide-react';
+import { Cpu, Terminal, Shield, ArrowRight, Volume2, Key, Sparkles } from 'lucide-react';
 
 export default function DocsPage() {
   return (

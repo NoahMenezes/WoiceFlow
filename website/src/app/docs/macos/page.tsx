@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Terminal, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Shield, Terminal, AlertCircle } from 'lucide-react';
 
 export default function MacOSDocs() {
   return (

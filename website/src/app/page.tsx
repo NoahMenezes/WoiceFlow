@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { LogIn, UserPlus, Play, Sparkles, Menu, X, Shield, Check, Copy, Terminal, Cpu, Keyboard, Volume2, Users } from 'lucide-react';
+import { LogIn, UserPlus, Play, Sparkles, Menu, X, Shield, Check, Copy, Cpu, Keyboard, Volume2, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 import BoomerangVideoBg from '@/components/BoomerangVideoBg';
 import { Terminal as MagicTerminal, AnimatedSpan, TypingAnimation } from '@/components/ui/terminal';
@@ -12,7 +12,6 @@ const BG_VIDEO =
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'fedora' | 'ubuntu' | 'arch'>('fedora');
   const [copiedText, setCopiedText] = useState<string | null>(null);
 
   const handleCopy = (text: string) => {
