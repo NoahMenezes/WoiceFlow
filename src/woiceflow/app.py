@@ -396,7 +396,41 @@ def load_dotenv() -> None:
             logger.warning(f"Failed to load environment variables from {env_path}: {e}")
 
 def main():
+    import sys
     load_dotenv()
+    
+    if "--toggle" in sys.argv:
+        import socket
+        try:
+            uid = os.getuid()
+        except AttributeError:
+            uid = 1000
+        runtime_dir = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{uid}")
+        socket_path = os.path.join(runtime_dir, "woiceflow.socket")
+        
+        is_windows = os.name == 'nt'
+        if is_windows:
+            port = 17005
+            try:
+                client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                client.connect(('127.0.0.1', port))
+                client.sendall(b"toggle\n")
+                client.close()
+                print("🎙️ WoiceFlow toggle signal sent via TCP!")
+                sys.exit(0)
+            except Exception:
+                pass
+        else:
+            try:
+                client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                client.connect(socket_path)
+                client.sendall(b"toggle")
+                client.close()
+                print("🎙️ WoiceFlow toggle signal sent via Unix Socket!")
+                sys.exit(0)
+            except Exception:
+                pass
+
     app = WoiceFlowApp()
     app.start()
 

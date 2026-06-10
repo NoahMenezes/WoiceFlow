@@ -32,6 +32,68 @@ def print_banner():
     console.print(panel)
     console.print()
 
+def setup_gnome_keybinding(install_dir):
+    import re
+    import ast
+    # Check if gsettings is available
+    if not shutil.which("gsettings"):
+        return
+    
+    target_path = "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/woiceflow/"
+    
+    # Read current custom keybindings list:
+    try:
+        res = subprocess.run(
+            ["gsettings", "get", "org.gnome.settings-daemon.plugins.media-keys", "custom-keybindings"],
+            capture_output=True, text=True, check=True
+        )
+        bindings_str = res.stdout.strip()
+    except Exception:
+        bindings_str = "@as []"
+    
+    bindings = []
+    if bindings_str.startswith("["):
+        try:
+            bindings = ast.literal_eval(bindings_str)
+        except Exception:
+            bindings = re.findall(r"'/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/[^']+'", bindings_str)
+            bindings = [b.strip("'") for b in bindings]
+    
+    cleaned_bindings = []
+    for b in bindings:
+        # Check the name of this binding
+        try:
+            name_res = subprocess.run(
+                ["gsettings", "get", f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{b}", "name"],
+                capture_output=True, text=True
+            )
+            name_val = name_res.stdout.strip().strip("'\"")
+            # If it's WoiceFlow Toggle and not our target path, remove/clean it to avoid conflict
+            if name_val == "WoiceFlow Toggle" and b != target_path:
+                subprocess.run(["gsettings", "reset-recursively", f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{b}"])
+                continue
+        except Exception:
+            pass
+        cleaned_bindings.append(b)
+        
+    if target_path not in cleaned_bindings:
+        cleaned_bindings.append(target_path)
+        
+    # Format the list back to gsettings format
+    formatted_bindings = "[" + ", ".join([f"'{b}'" for b in cleaned_bindings]) + "]"
+    
+    # Write the new keybindings list
+    subprocess.run(["gsettings", "set", "org.gnome.settings-daemon.plugins.media-keys", "custom-keybindings", formatted_bindings], check=True)
+    
+    # Now set the properties of our custom keybinding
+    toggle_script = os.path.join(install_dir, "src/woiceflow/hotkeys/toggle.py")
+    venv_python = os.path.join(install_dir, ".venv/bin/python")
+    command_str = f"{venv_python} {toggle_script}"
+    
+    subprocess.run(["gsettings", "set", f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{target_path}", "name", "WoiceFlow Toggle"], check=True)
+    subprocess.run(["gsettings", "set", f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{target_path}", "binding", "F9"], check=True)
+    subprocess.run(["gsettings", "set", f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:{target_path}", "command", command_str], check=True)
+
 def main():
     if len(sys.argv) < 2:
         console.print("[bold bright_red]Error: Installation directory argument missing.[/bold bright_red]")
@@ -47,9 +109,10 @@ def main():
         ("Creating directory layout", 10),
         ("Writing setup environment config (.env)", 10),
         ("Building python startup wrapper (woiceflow.sh)", 15),
-        ("Generating systemd user service manifest", 20),
-        ("Reloading systemd daemon & environment", 20),
-        ("Starting WoiceFlow user-level service daemon", 25)
+        ("Configuring background service manager", 20),
+        ("Reloading environment profiles", 15),
+        ("Registering GNOME F9 global hotkey keybinding", 15),
+        ("Starting WoiceFlow user-level service daemon", 15)
     ]
 
     with Progress(
@@ -141,13 +204,21 @@ WantedBy=default.target
             progress.update(overall_task, description="Reloading systemd daemon & environment...")
             subprocess.run(["systemctl", "--user", "daemon-reload"], check=False)
             subprocess.run(["systemctl", "--user", "import-environment", "DISPLAY", "WAYLAND_DISPLAY", "XDG_RUNTIME_DIR", "DBUS_SESSION_BUS_ADDRESS"], check=False)
-            progress.advance(overall_task, 20)
+            progress.advance(overall_task, 15)
+
+            # 5.5 GNOME global hotkey keybinding configuration
+            progress.update(overall_task, description="Registering GNOME F9 global hotkey keybinding...")
+            try:
+                setup_gnome_keybinding(install_dir)
+            except Exception:
+                pass
+            progress.advance(overall_task, 15)
 
             # 6. Starting daemon
             progress.update(overall_task, description="Starting WoiceFlow user-level service daemon...")
             subprocess.run(["systemctl", "--user", "enable", f"{service_name}.service"], check=False)
             subprocess.run(["systemctl", "--user", "restart", f"{service_name}.service"], check=False)
-            progress.advance(overall_task, 25)
+            progress.advance(overall_task, 15)
         else:
             # Fallback to XDG Autostart
             progress.update(overall_task, description="Generating XDG autostart file...")
@@ -167,9 +238,24 @@ X-GNOME-Autostart-enabled=true
             with open(desktop_path, "w") as f:
                 f.write(desktop_content)
             progress.advance(overall_task, 20)
+
+            # 5. Skip reloading (advance progress)
+            progress.update(overall_task, description="Skipping systemd environment configuration...")
+            time.sleep(0.1)
+            progress.advance(overall_task, 15)
+
+            # 5.5 GNOME global hotkey keybinding configuration
+            progress.update(overall_task, description="Registering GNOME F9 global hotkey keybinding...")
+            try:
+                setup_gnome_keybinding(install_dir)
+            except Exception:
+                pass
+            progress.advance(overall_task, 15)
+
+            # 6. Launching WoiceFlow in the background
             progress.update(overall_task, description="Launching WoiceFlow in the background...")
             subprocess.Popen([wrapper_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            progress.advance(overall_task, 45)
+            progress.advance(overall_task, 15)
 
         progress.update(overall_task, description="[bold bright_green]Installation complete![/bold bright_green]")
         time.sleep(0.5)
