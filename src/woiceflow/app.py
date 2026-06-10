@@ -24,7 +24,6 @@ from woiceflow.audio.recorder import AudioRecorder
 from woiceflow.speech.whisper_engine import WhisperEngine
 from woiceflow.injector.typer import TextInjector
 from woiceflow.hotkeys.listener import HotkeyListener
-from woiceflow.text.formatter import TextFormatter
 
 import json
 
@@ -177,7 +176,6 @@ class WoiceFlowApp:
         self.console = Console()
         self.recorder = AudioRecorder(on_amplitude=self._on_amplitude)
         self.engine = WhisperEngine()
-        self.formatter = TextFormatter()
         self.injector = TextInjector()
         
         # State machine: "idle", "recording", "transcribing"
@@ -342,11 +340,6 @@ class WoiceFlowApp:
                 if self.use_gui:
                     self.hud_controller.update_hud("error", "❌ No speech recognized.", 2500)
                 return
-
-            self.console.print("[bold blue]✨ Structuring and formatting text with AI...[/bold blue]")
-            if self.use_gui:
-                self.hud_controller.update_hud("transcribing", "✨ Formatting Text...")
-            transcript = self.formatter.format(transcript)
 
             self.console.print(f"[bold green]✨ Dictated:[/bold green] \"[italic]{transcript}[/italic]\"")
             self.ipc_server.broadcast("TranscribingFinished", {"text": transcript})

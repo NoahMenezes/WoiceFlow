@@ -280,7 +280,7 @@ pip install --upgrade pip --quiet
 
 # Install all Python dependencies
 info "Installing Python packages (this may take a few minutes)..."
-pip install faster-whisper loguru numpy pynput pyqt6 rich scipy sounddevice ollama
+pip install faster-whisper loguru numpy pynput pyqt6 rich scipy sounddevice
 
 # Install the woiceflow package itself in editable mode
 pip install -e . --quiet
@@ -345,7 +345,7 @@ Restart=on-failure
 RestartSec=5s
 # Pass through display and Wayland session variables
 Environment=DISPLAY=:0
-PassEnvironment=DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS XAUTHORITY
+PassEnvironment=DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS
 # Capture logs — view with: journalctl --user -u woiceflow -f
 StandardOutput=journal
 StandardError=journal
@@ -356,7 +356,7 @@ EOF
 
     systemctl --user daemon-reload
     # Import current session variables so the service can access the display
-    systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS XAUTHORITY 2>/dev/null || true
+    systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS 2>/dev/null || true
     systemctl --user enable "${SERVICE_NAME}.service"
     systemctl --user restart "${SERVICE_NAME}.service"
 
