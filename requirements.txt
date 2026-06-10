@@ -6,3 +6,4 @@ pyqt6>=6.11.0
 rich>=15.0.0
 scipy>=1.17.1
 sounddevice>=0.5.5
+ollama>=0.3.0
