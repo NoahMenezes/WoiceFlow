@@ -224,7 +224,7 @@ echo "======================================================"
 mkdir -p "$INSTALL_DIR"
 
 # Try to copy from current directory first (running from source checkout)
-if cp -r src/ main.py pyproject.toml "$INSTALL_DIR/" 2>/dev/null; then
+if cp -r src/ main.py pyproject.toml installer_gui.py "$INSTALL_DIR/" 2>/dev/null; then
     # Copy .env only if it exists
     [ -f .env ] && cp .env "$INSTALL_DIR/"
     success "Copied application files from current directory."
@@ -244,16 +244,6 @@ else
     success "WoiceFlow cloned from GitHub."
 fi
 
-# Create a default .env if one does not exist
-if [ ! -f "$INSTALL_DIR/.env" ]; then
-    cat > "$INSTALL_DIR/.env" <<'ENVEOF'
-HF_TOKEN=
-WOICEFLOW_MODEL_SIZE=base
-WOICEFLOW_DEVICE=cpu
-WOICEFLOW_COMPUTE_TYPE=int8
-ENVEOF
-    info "Created default .env file. Edit $INSTALL_DIR/.env to customise settings."
-fi
 echo ""
 
 # ─────────────────────────────────────────────
@@ -289,153 +279,6 @@ success "Python environment ready."
 echo ""
 
 # ─────────────────────────────────────────────
-# 6. Create the wrapper startup script
+# 6. Run the Rich graphical installer
 # ─────────────────────────────────────────────
-echo "======================================================"
-echo " Step 6: Creating startup wrapper script..."
-echo "======================================================"
-
-cat > "$INSTALL_DIR/woiceflow.sh" << 'WRAPEOF'
-#!/bin/bash
-# WoiceFlow startup wrapper
-# Waits for the graphical session to fully initialize, then launches the app.
-
-# Give the desktop environment time to settle after login
-sleep 5
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-cd "$DIR"
-
-# Activate the virtual environment
-source .venv/bin/activate
-
-# Log output to a file for easy debugging
-LOG_FILE="$HOME/.local/share/woiceflow/woiceflow.log"
-mkdir -p "$(dirname "$LOG_FILE")"
-
-echo "[$(date)] WoiceFlow starting..." >> "$LOG_FILE"
-exec python main.py >> "$LOG_FILE" 2>&1
-WRAPEOF
-chmod +x "$INSTALL_DIR/woiceflow.sh"
-success "Wrapper script created at $INSTALL_DIR/woiceflow.sh"
-echo ""
-
-# ─────────────────────────────────────────────
-# 7. Register systemd user service (autostart)
-# ─────────────────────────────────────────────
-echo "======================================================"
-echo " Step 7: Registering systemd autostart service..."
-echo "======================================================"
-
-if command -v systemctl &>/dev/null && systemctl --user status &>/dev/null 2>&1; then
-    mkdir -p "$SYSTEMD_USER_DIR"
-
-    cat > "$SYSTEMD_USER_DIR/${SERVICE_NAME}.service" << EOF
-[Unit]
-Description=WoiceFlow Voice Dictation
-Documentation=https://github.com/NoahMenezes/WoiceFlow
-# Start after the graphical session is ready
-After=graphical-session.target
-Wants=graphical-session.target
-
-[Service]
-Type=simple
-ExecStart=${INSTALL_DIR}/woiceflow.sh
-Restart=on-failure
-RestartSec=5s
-# Pass through display and Wayland session variables
-Environment=DISPLAY=:0
-PassEnvironment=DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS
-# Capture logs — view with: journalctl --user -u woiceflow -f
-StandardOutput=journal
-StandardError=journal
-
-[Install]
-WantedBy=default.target
-EOF
-
-    systemctl --user daemon-reload
-    # Import current session variables so the service can access the display
-    systemctl --user import-environment DISPLAY WAYLAND_DISPLAY XDG_RUNTIME_DIR DBUS_SESSION_BUS_ADDRESS 2>/dev/null || true
-    systemctl --user enable "${SERVICE_NAME}.service"
-    systemctl --user restart "${SERVICE_NAME}.service"
-
-    success "systemd user service enabled and started."
-else
-    # Fallback: XDG autostart .desktop file (works on GNOME, KDE, XFCE, etc.)
-    warn "systemd --user not available. Using XDG autostart fallback."
-    AUTOSTART_DIR="$HOME/.config/autostart"
-    mkdir -p "$AUTOSTART_DIR"
-    cat > "$AUTOSTART_DIR/woiceflow.desktop" << EOF
-[Desktop Entry]
-Type=Application
-Name=WoiceFlow
-Comment=Voice Dictation Tool
-Exec=${INSTALL_DIR}/woiceflow.sh
-Icon=microphone-sensitivity-high-symbolic
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-EOF
-    success "XDG autostart entry created at $AUTOSTART_DIR/woiceflow.desktop"
-
-    # Start now in background
-    nohup "$INSTALL_DIR/woiceflow.sh" &>/dev/null &
-    success "WoiceFlow launched in the background."
-fi
-
-echo ""
-
-# ─────────────────────────────────────────────
-# 8. Wayland / ydotool reminder
-# ─────────────────────────────────────────────
-SESSION_TYPE="${XDG_SESSION_TYPE:-unknown}"
-if [ "$SESSION_TYPE" = "wayland" ]; then
-    echo "======================================================"
-    echo " ℹ️  Wayland Session Detected"
-    echo "======================================================"
-    if ! command -v ydotool &>/dev/null; then
-        echo ""
-        echo "  ydotool is not installed. WoiceFlow will use pynput as a fallback"
-        echo "  for text injection, which works for most apps."
-        echo ""
-        echo "  For best Wayland compatibility (especially in native Wayland apps),"
-        echo "  install ydotool from your package manager:"
-        echo ""
-        case "$PKG_MANAGER" in
-            apt)    echo "    sudo apt-get install ydotool" ;;
-            dnf)    echo "    sudo dnf install ydotool" ;;
-            pacman) echo "    yay -S ydotool  (or paru -S ydotool)" ;;
-            zypper) echo "    sudo zypper install ydotool" ;;
-            *)      echo "    https://github.com/ReimuNotMoe/ydotool" ;;
-        esac
-        echo ""
-    else
-        success "ydotool is installed — full Wayland text injection supported."
-    fi
-fi
-
-# ─────────────────────────────────────────────
-# Done
-# ─────────────────────────────────────────────
-echo ""
-echo "╔══════════════════════════════════════════════════════╗"
-echo "║  ✅  WoiceFlow installed successfully!               ║"
-echo "╚══════════════════════════════════════════════════════╝"
-echo ""
-echo "  Press F9 anywhere to start/stop voice dictation."
-echo ""
-echo "📋 Useful commands:"
-if command -v systemctl &>/dev/null && systemctl --user status woiceflow &>/dev/null 2>&1; then
-    echo "  View live logs:   journalctl --user -u woiceflow -f"
-    echo "  Check status:     systemctl --user status woiceflow"
-    echo "  Restart:          systemctl --user restart woiceflow"
-    echo "  Stop:             systemctl --user stop woiceflow"
-    echo "  Disable autostart: systemctl --user disable woiceflow"
-else
-    echo "  View logs:        cat $HOME/.local/share/woiceflow/woiceflow.log"
-    echo "  Run manually:     $INSTALL_DIR/woiceflow.sh"
-fi
-echo ""
-echo "  Settings file:    $INSTALL_DIR/.env"
-echo ""
+.venv/bin/python installer_gui.py "$INSTALL_DIR"
