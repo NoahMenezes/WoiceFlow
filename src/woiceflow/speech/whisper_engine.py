@@ -82,8 +82,9 @@ class WhisperEngine:
 
     def _filter_audio(self, audio_data: np.ndarray, fs: int = 16000) -> np.ndarray:
         """
-        Applies a human speech bandpass filter (150Hz - 3400Hz) and a spectral subtraction
-        gating algorithm to clean background music and steady-state ambient noise.
+        Applies a human speech bandpass filter and a spectral subtraction
+        gating algorithm to clean background music and steady-state ambient noise,
+        while normalizing and preserving quiet whispers.
         """
         if len(audio_data) < 512:
             return audio_data
@@ -91,10 +92,18 @@ class WhisperEngine:
         try:
             from scipy.signal import butter, lfilter, stft, istft
             
-            # 1. Butterworth Bandpass Filter (human speech harmonics)
+            # Normalize audio first to boost quiet whispers to an audible range
+            max_amp = np.max(np.abs(audio_data))
+            if max_amp > 0 and max_amp < 0.5:
+                # Boost quiet audio safely without hard clipping
+                audio_data = audio_data * (0.5 / max_amp)
+
+            # 1. Butterworth Bandpass Filter (human speech harmonics + whispers)
+            # Widen the band to 80Hz - 7500Hz. Whispers heavily rely on high-frequency
+            # sibilants (up to 8kHz) which were previously being cut off at 3400Hz.
             nyq = 0.5 * fs
-            low = 150.0 / nyq
-            high = 3400.0 / nyq
+            low = 80.0 / nyq
+            high = 7500.0 / nyq
             b, a = butter(5, [low, high], btype='band')
             filtered = lfilter(b, a, audio_data)
             
@@ -105,13 +114,14 @@ class WhisperEngine:
             
             # Estimate background noise profile from the lowest energy frames
             frame_energies = np.sum(magnitude ** 2, axis=0)
-            num_noise_frames = max(1, len(frame_energies) // 7)
+            num_noise_frames = max(1, len(frame_energies) // 10)
             noise_frame_indices = np.argsort(frame_energies)[:num_noise_frames]
             noise_spectrum = np.mean(magnitude[:, noise_frame_indices], axis=1, keepdims=True)
             
-            # Subtract noise profile using an over-subtraction factor of 2.5
-            alpha = 2.5
-            beta = 0.01  # Spectral floor
+            # Subtract noise profile using a softer over-subtraction factor
+            # This ensures we don't accidentally subtract out the quiet whisper signal
+            alpha = 1.2
+            beta = 0.05  # Spectral floor
             
             subtracted_magnitude = magnitude - alpha * noise_spectrum
             subtracted_magnitude = np.maximum(subtracted_magnitude, beta * magnitude)
@@ -156,7 +166,12 @@ class WhisperEngine:
                 beam_size=5,
                 language="en",  # Default to English for better latency, or auto-detect if None
                 vad_filter=True,  # Use Voice Activity Detection to filter out silence/noise
-                vad_parameters=dict(min_silence_duration_ms=500),
+                vad_parameters=dict(
+                    threshold=0.1,  # Ultra-low threshold to detect whispers
+                    min_silence_duration_ms=500,
+                    speech_pad_ms=400
+                ),
+                condition_on_previous_text=False, # Prevents hallucinating lyrics from background music
                 initial_prompt=prompt_guide
             )
 

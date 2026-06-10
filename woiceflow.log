@@ -1,0 +1,97 @@
+2026-06-10 13:15:42.336 | INFO     | woiceflow.injector.typer:_ensure_ydotoold_running:55 - ydotoold daemon is already running.
+Starting WoiceFlow Voice Dictation...
+Pre-loading Faster-Whisper model (this might take a few seconds)...
+2026-06-10 13:15:42.534 | INFO     | woiceflow.speech.whisper_engine:load_model:28 - Loading Faster-Whisper model 'base' on 'cpu' with compute type 'int8'...
+2026-06-10 13:15:44.695 | SUCCESS  | woiceflow.speech.whisper_engine:load_model:40 - Faster-Whisper model 'base' loaded successfully.
+2026-06-10 13:15:44.696 | INFO     | woiceflow.hotkeys.listener:_run_listener:32 - Starting global hotkey listener for: <f9>
+2026-06-10 13:15:44.697 | INFO     | woiceflow.app:_listen_loop:70 - IPC Server started on Unix socket /run/user/1000/woiceflow.socket
+2026-06-10 13:15:44.696 | DEBUG    | woiceflow.hotkeys.listener:start:53 - Hotkey listener thread spawned.
+
+🚀 WoiceFlow is active and running!
+  • Press F9 to start recording.
+  • Speak your text.
+  • Press F9 again to stop, transcribe, and inject.
+  • Press Ctrl+C in this terminal to quit.
+
+2026-06-10 13:15:44.711 | INFO     | woiceflow.app:start:247 - Starting PyQt6 Event Loop...
+2026-06-10 13:16:09.675 | DEBUG    | woiceflow.app:_handle_client:88 - New IPC client connected.
+2026-06-10 13:16:09.675 | DEBUG    | woiceflow.app:_handle_client:105 - Received legacy toggle signal via IPC.
+2026-06-10 13:16:09.675 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-10 13:16:09.696 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-10 13:16:09.698 | DEBUG    | woiceflow.app:_handle_client:121 - IPC client disconnected.
+2026-06-10 13:16:12.907 | DEBUG    | woiceflow.app:_handle_client:88 - New IPC client connected.
+2026-06-10 13:16:12.907 | DEBUG    | woiceflow.app:_handle_client:105 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-10 13:16:12.918 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-10 13:16:12.918 | DEBUG    | woiceflow.app:_handle_client:121 - IPC client disconnected.
+2026-06-10 13:16:12.939 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 3.20 seconds of audio.
+Audio volume check: Peak amplitude is 1.1055
+2026-06-10 13:16:12.951 | DEBUG    | woiceflow.app:_process_and_inject:320 - Saved debug recording to /home/noah/Desktop/Python/WoiceFlow/last_recording.wav
+🎙️ Transcribing speech...
+2026-06-10 13:16:19.778 | INFO     | woiceflow.speech.whisper_engine:transcribe:148 - Starting transcription of 3.20s of audio...
+2026-06-10 13:16:20.961 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:167 - Transcribed segment: [0.00s -> 3.00s] ' Hello. What is your name?'
+2026-06-10 13:16:20.963 | INFO     | woiceflow.speech.whisper_engine:transcribe:171 - Transcription finished. Result: 'Hello. What is your name?'
+✨ Dictated: "Hello. What is your name?"
+⌨️ Injecting text into active window...
+2026-06-10 13:16:20.965 | INFO     | woiceflow.injector.typer:inject:124 - Injecting text using ydotool: 'Hello. What is your name?' (delay: 2ms, hold: 1ms)
+2026-06-10 13:16:21.063 | SUCCESS  | woiceflow.injector.typer:inject:143 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-10 13:16:25.188 | DEBUG    | woiceflow.app:_handle_client:88 - New IPC client connected.
+2026-06-10 13:16:25.188 | DEBUG    | woiceflow.app:_handle_client:105 - Received legacy toggle signal via IPC.
+2026-06-10 13:16:25.189 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-10 13:16:25.208 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-10 13:16:25.209 | DEBUG    | woiceflow.app:_handle_client:121 - IPC client disconnected.
+2026-06-10 13:17:52.391 | DEBUG    | woiceflow.app:_handle_client:88 - New IPC client connected.
+2026-06-10 13:17:52.401 | DEBUG    | woiceflow.app:_handle_client:121 - IPC client disconnected.
+2026-06-10 13:17:52.868 | DEBUG    | woiceflow.app:_handle_client:88 - New IPC client connected.
+2026-06-10 13:17:52.870 | DEBUG    | woiceflow.app:_handle_client:121 - IPC client disconnected.
+2026-06-10 13:17:56.678 | DEBUG    | woiceflow.app:_handle_client:88 - New IPC client connected.
+2026-06-10 13:17:56.678 | DEBUG    | woiceflow.app:_handle_client:105 - Received legacy toggle signal via IPC.
+⏳ Stopped recording. Processing audio...
+2026-06-10 13:17:56.697 | INFO     | woiceflow.audio.recorder:stop_recording:69 - Stopping audio recording...
+2026-06-10 13:17:56.698 | DEBUG    | woiceflow.app:_handle_client:121 - IPC client disconnected.
+2026-06-10 13:17:56.772 | SUCCESS  | woiceflow.audio.recorder:stop_recording:101 - Recording stopped. Captured 91.46 seconds of audio.
+Audio volume check: Peak amplitude is 1.1183
+2026-06-10 13:17:56.831 | DEBUG    | woiceflow.app:_process_and_inject:320 - Saved debug recording to /home/noah/Desktop/Python/WoiceFlow/last_recording.wav
+🎙️ Transcribing speech...
+2026-06-10 13:17:57.585 | INFO     | woiceflow.speech.whisper_engine:transcribe:148 - Starting transcription of 91.46s of audio...
+2026-06-10 13:17:59.518 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:167 - Transcribed segment: [0.00s -> 26.44s] ' So basically, in the current whisper flow version, what is the actual real-world production, what it does is basically, when I whisper even slowly enough to my device, it should detect that whisper at the slowest voice, at the slowest frequency or voice as possible, lowest frequency, which is like basically when I whisper slowly to my phone, it should detect that voice as well.'
+2026-06-10 13:18:00.766 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:167 - Transcribed segment: [26.44s -> 58.38s] ' So that is the feature I want to add in this product, and also, when I speak out loud with music in the background, and the tools should be able to detect my voice in a noisy background as well, and classified and then transcribed and produce my voice very accurately and very correctly in detail without any issues in the code, without any issues.'
+2026-06-10 13:18:02.132 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:167 - Transcribed segment: [59.38s -> 75.57s] " Provide the correct text, that's what I mean, provide the correct text, transcribed from the dictator tool, so add this feature in my project product."
+2026-06-10 13:18:02.133 | DEBUG    | woiceflow.speech.whisper_engine:transcribe:167 - Transcribed segment: [75.57s -> 85.57s] " Now be the code, and then make sure it works when I whisper to my device and also when there's a noisy background as well, it should detect my voice perfectly."
+2026-06-10 13:18:02.133 | INFO     | woiceflow.speech.whisper_engine:transcribe:171 - Transcription finished. Result: "So basically, in the current whisper flow version, what is the actual real-world production, what it does is basically, when I whisper even slowly enough to my device, it should detect that whisper at the slowest voice, at the slowest frequency or voice as possible, lowest frequency, which is like basically when I whisper slowly to my phone, it should detect that voice as well. So that is the feature I want to add in this product, and also, when I speak out loud with music in the background, and the tools should be able to detect my voice in a noisy background as well, and classified and then transcribed and produce my voice very accurately and very correctly in detail without any issues in the code, without any issues. Provide the correct text, that's what I mean, provide the correct text, transcribed from the dictator tool, so add this feature in my project product. Now be the code, and then make sure it works when I whisper to my device and also when there's a noisy background as well, it should detect my voice perfectly."
+✨ Dictated: "So basically, in the current whisper flow version, what is the 
+actual real-world production, what it does is basically, when I whisper even 
+slowly enough to my device, it should detect that whisper at the slowest voice, 
+at the slowest frequency or voice as possible, lowest frequency, which is like 
+basically when I whisper slowly to my phone, it should detect that voice as 
+well. So that is the feature I want to add in this product, and also, when I 
+speak out loud with music in the background, and the tools should be able to 
+detect my voice in a noisy background as well, and classified and then 
+transcribed and produce my voice very accurately and very correctly in detail 
+without any issues in the code, without any issues. Provide the correct text, 
+that's what I mean, provide the correct text, transcribed from the dictator 
+tool, so add this feature in my project product. Now be the code, and then make 
+sure it works when I whisper to my device and also when there's a noisy 
+background as well, it should detect my voice perfectly."
+⌨️ Injecting text into active window...
+2026-06-10 13:18:02.134 | INFO     | woiceflow.injector.typer:inject:124 - Injecting text using ydotool: "So basically, in the current whisper flow version, what is the actual real-world production, what it does is basically, when I whisper even slowly enough to my device, it should detect that whisper at the slowest voice, at the slowest frequency or voice as possible, lowest frequency, which is like basically when I whisper slowly to my phone, it should detect that voice as well. So that is the feature I want to add in this product, and also, when I speak out loud with music in the background, and the tools should be able to detect my voice in a noisy background as well, and classified and then transcribed and produce my voice very accurately and very correctly in detail without any issues in the code, without any issues. Provide the correct text, that's what I mean, provide the correct text, transcribed from the dictator tool, so add this feature in my project product. Now be the code, and then make sure it works when I whisper to my device and also when there's a noisy background as well, it should detect my voice perfectly." (delay: 2ms, hold: 1ms)
+2026-06-10 13:18:05.408 | SUCCESS  | woiceflow.injector.typer:inject:143 - Text successfully injected using ydotool.
+✅ Text injected successfully!
+
+Ready! Press F9 to record.
+2026-06-10 13:19:01.237 | DEBUG    | woiceflow.app:_handle_client:88 - New IPC client connected.
+2026-06-10 13:19:01.237 | DEBUG    | woiceflow.app:_handle_client:105 - Received legacy toggle signal via IPC.
+2026-06-10 13:19:01.237 | INFO     | woiceflow.audio.recorder:start_recording:44 - Starting audio recording at 16000Hz, channels=1...
+2026-06-10 13:19:01.258 | SUCCESS  | woiceflow.audio.recorder:start_recording:55 - Recording started successfully.
+
+🔴 Recording... Speak now. Press F9 to finish.
+2026-06-10 13:19:01.259 | DEBUG    | woiceflow.app:_handle_client:121 - IPC client disconnected.
+/usr/lib64/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-_27hzhuv'}
+  warnings.warn(
