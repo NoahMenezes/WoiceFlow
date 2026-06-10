@@ -5,9 +5,8 @@ import os
 class TextFormatter:
     """Formats raw dictation transcripts into structured, grammatically correct text using a local LLM via Ollama."""
 
-    def __init__(self, model_name: str = "phi3"):
-        # We default to 'phi3' because it is extremely fast (2.3GB), excellent at grammar, 
-        # and strictly follows formatting rules without cutting down the text length.
+    def __init__(self, model_name: str = "llama3.2:latest"):
+        # We default to 'llama3.2' because the user already has it installed, and it's excellent for strict formatting.
         self.model_name = os.getenv("WOICEFLOW_LLM_MODEL", model_name)
         self._ensure_ollama_running()
         
@@ -31,7 +30,15 @@ class TextFormatter:
             
             # Ensure the model is downloaded
             try:
-                models = [m['name'] for m in ollama.list().get('models', [])]
+                response = ollama.list()
+                # The ollama library might return dicts or objects depending on version
+                models = []
+                for m in getattr(response, 'models', response.get('models', [])):
+                    if isinstance(m, dict):
+                        models.append(m.get('name', m.get('model', '')))
+                    else:
+                        models.append(getattr(m, 'model', getattr(m, 'name', '')))
+                        
                 if self.model_name not in models and f"{self.model_name}:latest" not in models:
                     logger.info(f"Downloading the '{self.model_name}' model (this only happens once)...")
                     ollama.pull(self.model_name)
@@ -51,9 +58,11 @@ class TextFormatter:
             "Your ONLY job is to take the user's raw transcribed speech and format it beautifully. "
             "Follow these RULES strictly:\n"
             "1. Fix all grammatical, spelling, and syntax errors perfectly.\n"
-            "2. If the user lists items or describes a process, structure them using bullet points or numbered lists.\n"
-            "3. DO NOT summarize, shorten, or remove any information. The length and detail must remain the same.\n"
-            "4. NEVER add conversational filler like 'Here is your text:', 'Sure!', or 'I have formatted it'. "
+            "2. If the user mentions a list of items or describes a process (e.g. 'I want to list three things...'), "
+            "STRUCTURE THEM IMMEDIATELY using numbered bullet points on separate lines (e.g., 1) Morning 2) Evening).\n"
+            "3. Add proper spacing and newlines for readability.\n"
+            "4. DO NOT summarize, shorten, or remove any information. The length and detail must remain the same.\n"
+            "5. NEVER add conversational filler like 'Here is your text:', 'Sure!', or 'I have formatted it'. "
             "Output ONLY the final formatted text."
         )
 
